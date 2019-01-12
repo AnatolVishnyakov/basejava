@@ -56,7 +56,7 @@ public class ArrayStorage {
                     .getAsInt();
 
             int numMoved = index - indexRemoveElement - 1;
-            if (numMoved > 0){
+            if (numMoved > 0) {
                 System.arraycopy(storage, indexRemoveElement + 1, storage, indexRemoveElement, numMoved);
             }
             storage[--index] = null; // clear to let GC do its work
