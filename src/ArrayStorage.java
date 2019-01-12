@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 /**
  * Array based storage for Resumes
@@ -9,18 +10,19 @@ public class ArrayStorage {
     private int index = 0;
 
     void clear() {
+        index = 0;
     }
 
     /**
      * Сохранение резюме
      *
-     * @param r Resume
+     * @param resume Resume
      */
-    void save(Resume r) {
+    void save(Resume resume) {
         if (index >= DEFAULT_CAPACITY) {
-            throw new IndexOutOfBoundsException("Выход за пределы массива");
+            throw new IndexOutOfBoundsException("Выход за пределы массива.");
         }
-        storage[index++] = r;
+        storage[index++] = resume;
     }
 
     /**
@@ -29,21 +31,47 @@ public class ArrayStorage {
      * @param uuid String
      */
     Resume get(String uuid) {
-        return Arrays.stream(storage)
-                .filter(r -> r.uuid == uuid)
-                .findFirst()
-                .get();
+        Resume foundResume = null;
+        try {
+            foundResume = Arrays.stream(storage)
+                    .filter(r -> r.uuid == uuid)
+                    .findFirst()
+                    .get();
+        } catch (Exception exc) {
+            System.out.println(String.format("Резюме {%s} не найдено.", uuid));
+        }
+        return foundResume;
     }
 
+    /**
+     * Удаление резюме по uuid
+     *
+     * @param uuid String
+     */
     void delete(String uuid) {
+        try {
+            int indexRemoveElement = IntStream.range(0, storage.length)
+                    .filter(i -> storage[i].uuid == uuid)
+                    .findFirst()
+                    .getAsInt();
 
+            int numMoved = index - indexRemoveElement - 1;
+            if (numMoved > 0)
+                System.arraycopy(storage, indexRemoveElement + 1, storage, indexRemoveElement, numMoved);
+            storage[--index] = null; // clear to let GC do its work
+        } catch (Exception exc) {
+            System.out.println("Элемент не найден...");
+        }
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        return new Resume[0];
+        if (index == 0) {
+            return new Resume[0];
+        }
+        return Arrays.copyOfRange(storage, 0, size());
     }
 
     int size() {
