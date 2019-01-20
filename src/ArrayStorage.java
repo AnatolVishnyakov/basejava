@@ -1,112 +1,108 @@
 import java.util.Arrays;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private final int DEFAULT_CAPACITY = 10_000;
+    private static final int DEFAULT_CAPACITY = 10_000;
+    private static final int RESUME_NOT_FOUND = -1;
     private Resume[] storage = new Resume[DEFAULT_CAPACITY];
-    private int index = 0;
+    private int size = 0;
 
-    void clear() {
-        index = 0;
-    }
-
-    /**
-     * Сохранение резюме
-     *
-     * @param resume Resume
-     */
-    void save(Resume resume) {
-        if (!isExist(resume.uuid)) {
-            if (index >= DEFAULT_CAPACITY) {
-                throw new IndexOutOfBoundsException("Выход за пределы массива.");
+    public void clear() {
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                storage[i] = null;
             }
-            storage[index++] = resume;
+            size = 0;
         }
     }
 
     /**
-     * Получение резюме по UUID
+     * Save resume
+     *
+     * @param resume Resume
+     */
+    public void save(Resume resume) {
+        if (size >= DEFAULT_CAPACITY) {
+            System.out.println("Array index out of bounds.");
+            return;
+        }
+        int index = indexOf(resume.getUuid());
+        if (index != RESUME_NOT_FOUND) {
+            System.out.println(String.format("Resume with uuid=%s already exists.", resume.getUuid()));
+            return;
+        }
+
+        storage[size++] = resume;
+        System.out.println(String.format("Resume {%s} saved.", resume.getUuid()));
+    }
+
+    /**
+     * Get resume
      *
      * @param uuid String
      * @return Resume
      */
-    Resume get(String uuid) {
-        if (isExist(uuid)) {
-            Resume foundResume = streamStorage()
-                    .filter(r -> r.uuid == uuid)
-                    .findFirst()
-                    .get();
-            return foundResume;
+    public Resume get(String uuid) {
+        int index = indexOf(uuid);
+        if (index == RESUME_NOT_FOUND) {
+            System.out.println(String.format("Resume {%s} not found.", uuid));
+            return null;
         }
 
-        System.out.println(String.format("Резюме {%s} не найдено.", uuid));
-        return null;
+        return storage[index];
     }
 
     /**
-     * Удаление резюме по uuid
+     * Delete resume
      *
      * @param uuid String
      */
-    void delete(String uuid) {
-        if (isExist(uuid)) {
-            int indexRemoveElement = IntStream.range(0, index)
-                    .filter(i -> storage[i].uuid == uuid)
-                    .findFirst()
-                    .getAsInt();
-
-            int numMoved = index - indexRemoveElement - 1;
-            if (numMoved > 0) {
-                System.arraycopy(storage, indexRemoveElement + 1, storage, indexRemoveElement, numMoved);
-            }
-            storage[--index] = null; // clear to let GC do its work
-            System.out.println(String.format("Резюме {%s} удалено...", uuid));
-        } else {
-            System.out.println(String.format("Резюме {%s} не найдено...", uuid));
+    public void delete(String uuid) {
+        int index = indexOf(uuid);
+        if (index == RESUME_NOT_FOUND) {
+            System.out.println(String.format("Resume {%s} not found.", uuid));
+            return;
         }
+
+        storage[index] = storage[--size];
+        storage[size] = null;
     }
 
     /**
-     * Обновление резюме
+     * Update resume
      *
      * @param resume Resume
      */
-    void update(Resume resume) {
-        if (isExist(resume.uuid)) {
-            Resume foundResume = get(resume.uuid);
-            foundResume = resume;
-            System.out.println(String.format("Резюме {%s} обновлено...", resume.uuid));
-        } else {
-            System.out.println(String.format("Резюме {%s} не найдено...", resume.uuid));
+    public void update(Resume resume) {
+        int index = indexOf(resume.getUuid());
+        if (index == RESUME_NOT_FOUND) {
+            System.out.println(String.format("Resume {%s} not found.", resume.getUuid()));
+            return;
         }
+        storage[index] = resume;
     }
 
-    /**
-     * Проверка на существование резюме
-     *
-     * @param uuid Resume
-     * @return boolean
-     */
-    boolean isExist(String uuid) {
-        return streamStorage().anyMatch(r -> r.uuid == uuid);
-    }
-
-    Stream<Resume> streamStorage() {
-        return Arrays.stream(storage).limit(index);
+    private int indexOf(String uuid) {
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                index = i;
+                break;
+            }
+        }
+        return index;
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
-        return Arrays.copyOf(storage, index);
+    public Resume[] getAll() {
+        return Arrays.copyOf(storage, size);
     }
 
-    int size() {
-        return index;
+    public int size() {
+        return size;
     }
 }
