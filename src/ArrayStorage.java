@@ -35,7 +35,6 @@ public class ArrayStorage {
         }
 
         storage[size++] = resume;
-        System.out.println(String.format("Resume {%s} saved.", resume.getUuid()));
     }
 
     /**
