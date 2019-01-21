@@ -19,8 +19,6 @@ public class ArrayStorage {
     }
 
     /**
-     * Save resume
-     *
      * @param resume Resume
      */
     public void save(Resume resume) {
@@ -31,15 +29,12 @@ public class ArrayStorage {
         int index = indexOf(resume.getUuid());
         if (index != RESUME_NOT_FOUND) {
             System.out.println(String.format("Resume with uuid=%s already exists.", resume.getUuid()));
-            return;
+        } else {
+            storage[size++] = resume;
         }
-
-        storage[size++] = resume;
     }
 
     /**
-     * Get resume
-     *
      * @param uuid String
      * @return Resume
      */
@@ -54,44 +49,28 @@ public class ArrayStorage {
     }
 
     /**
-     * Delete resume
-     *
      * @param uuid String
      */
     public void delete(String uuid) {
         int index = indexOf(uuid);
         if (index == RESUME_NOT_FOUND) {
             System.out.println(String.format("Resume {%s} not found.", uuid));
-            return;
+        } else {
+            storage[index] = storage[--size];
+            storage[size] = null;
         }
-
-        storage[index] = storage[--size];
-        storage[size] = null;
     }
 
     /**
-     * Update resume
-     *
      * @param resume Resume
      */
     public void update(Resume resume) {
         int index = indexOf(resume.getUuid());
         if (index == RESUME_NOT_FOUND) {
             System.out.println(String.format("Resume {%s} not found.", resume.getUuid()));
-            return;
+        } else {
+            storage[index] = resume;
         }
-        storage[index] = resume;
-    }
-
-    private int indexOf(String uuid) {
-        int index = -1;
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                index = i;
-                break;
-            }
-        }
-        return index;
     }
 
     /**
@@ -103,5 +82,14 @@ public class ArrayStorage {
 
     public int size() {
         return size;
+    }
+
+    private int indexOf(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return RESUME_NOT_FOUND;
     }
 }
