@@ -5,13 +5,13 @@ import com.basejava.webapp.model.Resume;
 public interface Storage {
     void clear();
 
-    void save(Resume resume);
+    void update(Resume r);
+
+    void save(Resume r);
 
     Resume get(String uuid);
 
     void delete(String uuid);
-
-    void update(Resume resume);
 
     Resume[] getAll();
 
