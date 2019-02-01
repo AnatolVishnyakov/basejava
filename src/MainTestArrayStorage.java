@@ -1,69 +1,47 @@
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.storage.ArrayStorage;
-import com.basejava.webapp.storage.SortedArrayStorage;
-import com.basejava.webapp.storage.Storage;
 
 /**
  * Test for your ArrayStorage implementation
  */
 public class MainTestArrayStorage {
-    private static Storage storage;
-
-    private static Resume createResumeInSortedArrayStorage(Storage storage, String uuid){
-        Resume resume = new Resume();
-        resume.setUuid(uuid);
-        storage.save(resume);
-        return resume;
-    }
-
-    private static Resume createResumeInArrayStorage(Storage storage, String uuid){
-        Resume resume = new Resume();
-        resume.setUuid(uuid);
-        storage.save(resume);
-        return resume;
-    }
-
-    private static void testArrayStorageMethodSize(){
-        storage = new ArrayStorage();
-        System.out.println("\n:: ArrayStorage :: (create 3 objects)");
-        createResumeInSortedArrayStorage(storage, "uuid2");
-        createResumeInSortedArrayStorage(storage, "uuid1");
-        createResumeInSortedArrayStorage(storage, "uuid3");
-        printAll();
-    }
-
-    private static void testSortedArrayStorageMethodSize(){
-        storage = new SortedArrayStorage();
-        System.out.println("\n:: SortedArrayStorage :: (create 4 objects)");
-        createResumeInSortedArrayStorage(storage, "uuid2");
-        createResumeInSortedArrayStorage(storage, "uuid1");
-        createResumeInSortedArrayStorage(storage, "uuid3");
-        printAll();
-    }
-
-    private static void testSortedArraySave(){
-        storage.clear();
-        storage = new SortedArrayStorage();
-        createResumeInSortedArrayStorage(storage, "uuid2");
-        createResumeInSortedArrayStorage(storage, "uuid4");
-        createResumeInSortedArrayStorage(storage, "uuid1");
-        createResumeInSortedArrayStorage(storage, "uuid3");
-        printAll();
-        // uuid1
-        // uuid2
-        // uuid3
-        // uuid4
-    }
+    static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) {
-        testArrayStorageMethodSize();
-        testSortedArrayStorageMethodSize();
-//        testSortedArraySave();
+        Resume r1 = new Resume();
+        r1.setUuid("uuid1");
+        Resume r2 = new Resume();
+        r2.setUuid("uuid2");
+        Resume r3 = new Resume();
+        r3.setUuid("uuid3");
+
+        ARRAY_STORAGE.save(r1);
+        ARRAY_STORAGE.save(r2);
+        ARRAY_STORAGE.save(r3);
+        printAll();
+
+        Resume r4 = new Resume();
+        r4.setUuid("uuid2");
+        ARRAY_STORAGE.update(r4);
+        printAll();
+
+        System.out.println("Get r1: " + ARRAY_STORAGE.get(r1.getUuid()));
+        System.out.println("Size: " + ARRAY_STORAGE.size());
+
+        System.out.println("Get dummy: " + ARRAY_STORAGE.get("dummy"));
+
+        printAll();
+        ARRAY_STORAGE.delete(r1.getUuid());
+        printAll();
+        ARRAY_STORAGE.clear();
+        printAll();
+
+        System.out.println("Size: " + ARRAY_STORAGE.size());
     }
 
     static void printAll() {
         System.out.println("\nGet All");
-        for (Resume r : storage.getAll()) {
+        for (Resume r : ARRAY_STORAGE.getAll()) {
             System.out.println(r);
         }
     }

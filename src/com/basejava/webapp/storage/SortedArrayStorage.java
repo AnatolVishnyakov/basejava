@@ -6,43 +6,27 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
-    @Override
-    public void clear() {
-
-    }
 
     @Override
-    public void update(Resume resume) {
-
-    }
-
-    @Override
-    public void save(Resume resume) {
-        if (size >= DEFAULT_CAPACITY) {
-            System.out.println("Array index out of bounds.");
-            return;
-        }
-        int index = indexOf(resume.getUuid());
-        if (index == 0) {
+    protected void insertResume(int index, Resume resume) {
+        index = (-1 * index) - 1;
+        if (index == RESUME_NOT_FOUND) {
             System.out.println(String.format("Resume with uuid=%s already exists.", resume.getUuid()));
         } else {
-            storage[size++] = resume;
+            System.arraycopy(storage, index, storage, index + 1, size - index);
+            storage[index] = resume;
+            size++;
         }
     }
 
-    @Override
-    public void delete(String uuid) {
-
+    private int indexOf(Resume resume) {
+        return Arrays.binarySearch(storage, 0, size, resume, Comparator.comparing(Resume::getUuid));
     }
 
     @Override
     protected int indexOf(String uuid) {
-        Resume searchKey = new Resume();
-        searchKey.setUuid(uuid);
-        try {
-            return Arrays.binarySearch(storage, searchKey, Comparator.comparing(Resume::getUuid));
-        } catch (NullPointerException exc) {
-            return -1;
-        }
+        Resume resume = new Resume();
+        resume.setUuid(uuid);
+        return indexOf(resume);
     }
 }
