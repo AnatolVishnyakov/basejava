@@ -5,8 +5,8 @@ import com.basejava.webapp.model.Resume;
 import java.util.Arrays;
 
 public abstract class AbstractArrayStorage implements Storage {
-    protected static final int RESUME_NOT_FOUND = -1;
     private static final int DEFAULT_CAPACITY = 10_000;
+    protected static final int RESUME_NOT_FOUND = 0;
     protected final Resume[] storage = new Resume[DEFAULT_CAPACITY];
     protected int size = 0;
 
@@ -34,7 +34,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public void update(Resume resume) {
         int index = indexOf(resume.getUuid());
-        if (index <= RESUME_NOT_FOUND) {
+        if (index < RESUME_NOT_FOUND) {
             System.out.println(String.format("Resume {%s} not found.", resume.getUuid()));
         } else {
             storage[index] = resume;
@@ -47,7 +47,7 @@ public abstract class AbstractArrayStorage implements Storage {
             return;
         }
         int index = indexOf(resume.getUuid());
-        if (index > RESUME_NOT_FOUND) {
+        if (index >= RESUME_NOT_FOUND) {
             System.out.println(String.format("Resume with uuid=%s already exists.", resume.getUuid()));
         } else {
             insertElement(index, resume);
@@ -56,7 +56,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public void delete(String uuid) {
         int index = indexOf(uuid);
-        if (index == RESUME_NOT_FOUND) {
+        if (index < RESUME_NOT_FOUND) {
             System.out.println(String.format("Resume {%s} not found.", uuid));
         } else {
             deleteElementByIndex(index);
