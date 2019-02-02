@@ -14,6 +14,12 @@ public class MainTestSortedArrayStorage {
         return resume;
     }
 
+    private static void initStorage() {
+        STORAGE.clear();
+        Arrays.stream(TEST_UUID.split(","))
+                .forEach(uuid -> STORAGE.save(newResume(uuid)));
+    }
+
     private static void printAll() {
         System.out.print("PRINT ALL: ");
         Arrays.stream(STORAGE.getAll())
@@ -21,20 +27,21 @@ public class MainTestSortedArrayStorage {
     }
 
     private static void testMethodSave() {
-        System.out.println(String.format("\nADD: %s", TEST_UUID));
-        Arrays.stream(TEST_UUID.split(","))
-                .forEach(uuid -> STORAGE.save(newResume(uuid)));
+        System.out.println(String.format("\nSAVE: %s", TEST_UUID));
+        initStorage();
         System.out.println("RESULT: ");
         printAll();
     }
 
     private static void testMethodGet() {
+        initStorage();
         System.out.println("\nGET: ");
         Arrays.stream(TEST_UUID.split(","))
                 .forEach(uuid -> System.out.println(String.format("get %s: %s", uuid, STORAGE.get(uuid).getUuid())));
     }
 
     private static void testMethodUpdate() {
+        initStorage();
         System.out.println("\nUPDATE: ");
         Resume oldResume = STORAGE.get("uuid5");
         STORAGE.update(newResume("uuid5"));
@@ -43,7 +50,18 @@ public class MainTestSortedArrayStorage {
     }
 
     private static void testMethodDelete() {
-        final String deleteUuid = "uuid4";
+        initStorage();
+        String deleteUuid = "uuid1";
+        System.out.println("\nDELETE: " + deleteUuid);
+        STORAGE.delete(deleteUuid);
+        printAll();
+
+        deleteUuid = "uuid8";
+        System.out.println("\nDELETE: " + deleteUuid);
+        STORAGE.delete(deleteUuid);
+        printAll();
+
+        deleteUuid = "uuid4";
         System.out.println("\nDELETE: " + deleteUuid);
         STORAGE.delete(deleteUuid);
         printAll();

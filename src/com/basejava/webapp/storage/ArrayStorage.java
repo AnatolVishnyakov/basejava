@@ -8,20 +8,13 @@ import com.basejava.webapp.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected void insertResume(int index, Resume resume) {
-        if (index != RESUME_NOT_FOUND) {
-            System.out.println(String.format("Resume with uuid=%s already exists.", resume.getUuid()));
-        } else {
-            storage[size++] = resume;
-        }
+    protected void deleteElementByIndex(int index) {
+        storage[index] = storage[--size];
+        storage[size] = null;
     }
 
-    protected int indexOf(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return i;
-            }
-        }
-        return RESUME_NOT_FOUND;
+    @Override
+    protected void insertElement(int index, Resume resume) {
+        storage[size++] = resume;
     }
 }

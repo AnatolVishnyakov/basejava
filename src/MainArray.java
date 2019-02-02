@@ -44,7 +44,7 @@ public class MainArray {
 
         Resume r;
         while (true) {
-            System.out.print("Введите одну из команд - (list | save uuid | update uuid | delete uuid | get uuid | clear | exit): ");
+            System.out.print("Введите одну из команд - (list | save uuid | update uuid | delete uuid | get uuid | clear | size | exit): ");
             String[] params = reader.readLine().trim().toLowerCase().split(" ");
             if (!isValidCommand(params)) {
                 continue;
@@ -61,6 +61,10 @@ public class MainArray {
                     System.out.println(ARRAY_STORAGE.size());
                     break;
                 case "save":
+                    if (uuid == null) {
+                        System.out.println("Не введён uuid!");
+                        continue;
+                    }
                     r = new Resume();
                     r.setUuid(uuid);
                     ARRAY_STORAGE.save(r);
