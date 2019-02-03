@@ -10,19 +10,23 @@ public abstract class AbstractArrayStorage implements Storage {
     protected final Resume[] storage = new Resume[DEFAULT_CAPACITY];
     protected int size = 0;
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
+    @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
+    @Override
     public Resume get(String uuid) {
         int index = indexOf(uuid);
         if (index < RESUME_NOT_FOUND) {
@@ -32,6 +36,7 @@ public abstract class AbstractArrayStorage implements Storage {
         return storage[index];
     }
 
+    @Override
     public void update(Resume resume) {
         int index = indexOf(resume.getUuid());
         if (index < RESUME_NOT_FOUND) {
@@ -41,6 +46,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
+    @Override
     public void save(Resume resume) {
         if (size >= DEFAULT_CAPACITY) {
             System.out.println("Array index out of bounds.");
@@ -54,6 +60,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
+    @Override
     public void delete(String uuid) {
         int index = indexOf(uuid);
         if (index < RESUME_NOT_FOUND) {
@@ -63,15 +70,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    private int indexOf(String uuid) {
-        Resume resume = new Resume();
-        resume.setUuid(uuid);
-        return indexOf(resume);
-    }
-
-    private int indexOf(Resume resume) {
-        return Arrays.binarySearch(storage, 0, size, resume);
-    }
+    protected abstract int indexOf(String uuid);
 
     protected abstract void insertElement(int index, Resume resume);
 
