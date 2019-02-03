@@ -57,6 +57,7 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println(String.format("Resume with uuid=%s already exists.", resume.getUuid()));
         } else {
             insertElement(index, resume);
+            size++;
         }
     }
 
