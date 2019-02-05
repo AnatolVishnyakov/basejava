@@ -67,7 +67,7 @@ public abstract class AbstractArrayStorage implements Storage {
         if (index <= RESUME_NOT_FOUND) {
             System.out.println(String.format("Resume {%s} not found.", uuid));
         } else {
-            System.arraycopy(storage, index + 1, storage, index, size);
+            deleteElementByIndex(index);
             size--;
         }
     }
@@ -75,4 +75,6 @@ public abstract class AbstractArrayStorage implements Storage {
     protected abstract int indexOf(String uuid);
 
     protected abstract void insertElement(int index, Resume resume);
+
+    protected abstract void deleteElementByIndex(int index);
 }
