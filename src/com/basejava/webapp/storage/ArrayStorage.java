@@ -6,7 +6,6 @@ import com.basejava.webapp.model.Resume;
  * Array based storage for Resumes
  */
 public class ArrayStorage extends AbstractArrayStorage {
-
     @Override
     protected int indexOf(String uuid) {
         for (int i = 0; i < size; i++) {
@@ -15,11 +14,6 @@ public class ArrayStorage extends AbstractArrayStorage {
             }
         }
         return RESUME_NOT_FOUND;
-    }
-
-    @Override
-    protected void deleteElementByIndex(int index) {
-        storage[index] = storage[size];
     }
 
     @Override
