@@ -68,6 +68,7 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println(String.format("Resume {%s} not found.", uuid));
         } else {
             deleteElementByIndex(index);
+            storage[size - 1] = null;
             size--;
         }
     }

@@ -21,11 +21,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected void deleteElementByIndex(int index) {
-        int indexLastElement = size - 1;
-        if (index == indexLastElement) {
-            storage[indexLastElement] = null;
-        } else {
-            System.arraycopy(storage, index + 1, storage, index, size);
-        }
+        System.arraycopy(storage, index + 1, storage, index, size - index);
     }
 }
