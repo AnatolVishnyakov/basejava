@@ -65,8 +65,7 @@ public class MainArray {
                         System.out.println("Не введён uuid!");
                         continue;
                     }
-                    r = new Resume();
-                    r.setUuid(uuid);
+                    r = new Resume(uuid);
                     ARRAY_STORAGE.save(r);
                     printAll();
                     break;
@@ -84,8 +83,7 @@ public class MainArray {
                 case "exit":
                     return;
                 case "update":
-                    r = new Resume();
-                    r.setUuid(uuid);
+                    r = new Resume(uuid);
                     ARRAY_STORAGE.update(r);
                     printAll();
                     break;

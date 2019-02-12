@@ -9,8 +9,7 @@ public class MainTestSortedArrayStorage {
     private final static String TEST_UUID = "uuid5,uuid1,uuid1,uuid4,uuid6,uuid2,uuid8";
 
     private static Resume newResume(String uuid) {
-        Resume resume = new Resume();
-        resume.setUuid(uuid);
+        Resume resume = new Resume(uuid);
         return resume;
     }
 

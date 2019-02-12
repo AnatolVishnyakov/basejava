@@ -1,5 +1,8 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.exception.ExistStorageException;
+import com.basejava.webapp.exception.NotExistStorageException;
+import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -30,8 +33,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public Resume get(String uuid) {
         int index = indexOf(uuid);
         if (index <= RESUME_NOT_FOUND) {
-            System.out.println("Resume " + uuid + " not exist");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
@@ -40,7 +42,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void update(Resume resume) {
         int index = indexOf(resume.getUuid());
         if (index <= RESUME_NOT_FOUND) {
-            System.out.println(String.format("Resume {%s} not found.", resume.getUuid()));
+            throw new NotExistStorageException(resume.getUuid());
         } else {
             storage[index] = resume;
         }
@@ -49,12 +51,11 @@ public abstract class AbstractArrayStorage implements Storage {
     @Override
     public void save(Resume resume) {
         if (size >= DEFAULT_CAPACITY) {
-            System.out.println("Array index out of bounds.");
-            return;
+            throw new StorageException("Storage overflow.", resume.getUuid());
         }
         int index = indexOf(resume.getUuid());
         if (index > RESUME_NOT_FOUND) {
-            System.out.println(String.format("Resume with uuid=%s already exists.", resume.getUuid()));
+            throw new ExistStorageException(resume.getUuid());
         } else {
             insertElement(index, resume);
             size++;
@@ -65,7 +66,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void delete(String uuid) {
         int index = indexOf(uuid);
         if (index <= RESUME_NOT_FOUND) {
-            System.out.println(String.format("Resume {%s} not found.", uuid));
+            throw new NotExistStorageException(uuid);
         } else {
             deleteElementByIndex(index);
             storage[size - 1] = null;
