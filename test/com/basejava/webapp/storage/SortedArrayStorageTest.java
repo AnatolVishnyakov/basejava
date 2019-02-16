@@ -1,7 +1,10 @@
 package com.basejava.webapp.storage;
 
-import static org.junit.Assert.*;
+import org.junit.BeforeClass;
 
 public class SortedArrayStorageTest extends AbstractArrayStorageTest {
-
+    @BeforeClass
+    public static void initialize() {
+        storage = new SortedArrayStorage();
+    }
 }
