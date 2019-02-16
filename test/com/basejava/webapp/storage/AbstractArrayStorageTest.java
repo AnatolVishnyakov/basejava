@@ -11,7 +11,7 @@ public abstract class AbstractArrayStorageTest {
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
-    protected static Storage storage;
+    static Storage storage;
 
     @Before
     public void setUp() {
@@ -28,10 +28,19 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void getAll() {
+        Resume[] expected = new Resume[]{
+                new Resume(UUID_1),
+                new Resume(UUID_2),
+                new Resume(UUID_3)
+        };
+
+        assertArrayEquals(expected, storage.getAll());
     }
 
     @Test
     public void clear() {
+        storage.clear();
+        assertEquals(0, storage.size());
     }
 
     @Test
