@@ -5,6 +5,14 @@ import com.basejava.webapp.model.Resume;
 import java.util.Arrays;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
+    public SortedArrayStorage() {
+        super(DEFAULT_CAPACITY);
+    }
+
+    public SortedArrayStorage(int capacity) {
+        super(capacity);
+    }
+
     @Override
     protected int indexOf(String uuid) {
         Resume resume = new Resume(uuid);
