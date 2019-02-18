@@ -7,6 +7,11 @@ import java.lang.reflect.Method;
 public class MainReflection {
     private static Resume resume = new Resume();
 
+    public static void main(String[] args) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        testChangeFinalField();
+        testCallMethodToString();
+    }
+
     private static void testChangeFinalField() throws IllegalAccessException {
         System.out.println("\ntest change final field");
         Field field = resume.getClass().getDeclaredFields()[0];
@@ -23,10 +28,5 @@ public class MainReflection {
         Method method = resume.getClass().getMethod("toString");
         String result = (String) method.invoke(resume);
         System.out.println(result);
-    }
-
-    public static void main(String[] args) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        testChangeFinalField();
-        testCallMethodToString();
     }
 }

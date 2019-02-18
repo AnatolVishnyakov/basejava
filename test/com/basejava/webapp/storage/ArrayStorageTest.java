@@ -2,6 +2,6 @@ package com.basejava.webapp.storage;
 
 public class ArrayStorageTest extends AbstractArrayStorageTest {
     public ArrayStorageTest() {
-        super(new ArrayStorage(DEFAULT_CAPACITY));
+        super(new ArrayStorage());
     }
 }

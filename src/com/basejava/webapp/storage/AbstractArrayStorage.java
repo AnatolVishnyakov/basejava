@@ -8,16 +8,10 @@ import com.basejava.webapp.model.Resume;
 import java.util.Arrays;
 
 public abstract class AbstractArrayStorage implements Storage {
-    protected static final int DEFAULT_CAPACITY = 10_000;
+    private static final int DEFAULT_CAPACITY = 10_000;
     protected static final int RESUME_NOT_FOUND = -1;
-    protected final Resume[] storage;
-    private final int capacity;
+    protected final Resume[] storage = new Resume[DEFAULT_CAPACITY];
     protected int size = 0;
-
-    AbstractArrayStorage(int capacity) {
-        this.capacity = capacity;
-        this.storage = new Resume[capacity];
-    }
 
     @Override
     public int size() {
@@ -56,7 +50,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        if (size >= capacity) {
+        if (size >= DEFAULT_CAPACITY) {
             throw new StorageException("Storage overflow.", resume.getUuid());
         }
         int index = indexOf(resume.getUuid());
