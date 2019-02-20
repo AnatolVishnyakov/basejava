@@ -10,9 +10,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class AbstractArrayStorageTest {
-    private final Resume resume1 = new Resume("uuid1");
-    private final Resume resume2 = new Resume("uuid2");
-    private final Resume resume3 = new Resume("uuid3");
+    private static final Resume resume1 = new Resume("uuid1");
+    private static final Resume resume2 = new Resume("uuid2");
+    private static final Resume resume3 = new Resume("uuid3");
     private Storage storage;
 
     protected AbstractArrayStorageTest(Storage storage) {
@@ -86,8 +86,13 @@ public class AbstractArrayStorageTest {
 
     @Test(expected = StorageException.class)
     public void saveOverflow() {
-        for (int i = 4; i <= 10_000; i++) {
-            storage.save(new Resume("uuid" + i));
+        storage.clear();
+        try {
+            for (int i = 0; i < AbstractArrayStorage.DEFAULT_CAPACITY; i++) {
+                storage.save(new Resume("uuid" + i));
+            }
+        } catch (Exception exc) {
+            fail(exc.getMessage());
         }
 
         storage.save(new Resume("uuid10001"));
@@ -97,8 +102,7 @@ public class AbstractArrayStorageTest {
     public void delete() {
         storage.delete("uuid2");
         assertEquals(2, storage.size());
-
-        storage.delete("uuid2");
+        assertNull(storage.get("uuid2"));
     }
 
     @Test(expected = NotExistStorageException.class)
