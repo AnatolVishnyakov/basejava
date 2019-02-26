@@ -101,8 +101,8 @@ public class AbstractArrayStorageTest extends AbstractStorageTest {
     @Test(expected = NotExistStorageException.class)
     public void delete() {
         storage.delete("uuid2");
-        storage.get("uuid2");
         assertEquals(2, storage.size());
+        storage.get("uuid2");
     }
 
     @Test(expected = NotExistStorageException.class)
