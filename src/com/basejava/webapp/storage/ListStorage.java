@@ -2,7 +2,12 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ListStorage extends AbstractStorage {
+    List<Resume> storage = new ArrayList<>();
+
     @Override
     public void clear() {
 
@@ -30,11 +35,11 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public Resume[] getAll() {
-        return new Resume[0];
+        return (Resume[]) storage.toArray();
     }
 
     @Override
     public int size() {
-        return 0;
+        return storage.size();
     }
 }

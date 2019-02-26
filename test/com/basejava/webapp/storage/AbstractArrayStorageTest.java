@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class AbstractArrayStorageTest {
+public class AbstractArrayStorageTest extends AbstractStorageTest {
     private static final Resume RESUME_1 = new Resume("uuid1");
     private static final Resume RESUME_2 = new Resume("uuid2");
     private static final Resume RESUME_3 = new Resume("uuid3");
