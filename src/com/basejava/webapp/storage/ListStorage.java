@@ -1,7 +1,5 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.exception.ExistStorageException;
-import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.ArrayList;
@@ -16,44 +14,37 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void update(Resume resume) {
-        int index = storage.indexOf(resume);
-        if(index == RESUME_NOT_FOUND){
-            throw new NotExistStorageException(resume.getUuid());
-        }
-        storage.set(index, resume);
-    }
-
-    @Override
-    public void save(Resume resume) {
-        int index = storage.indexOf(resume);
-        if(index != RESUME_NOT_FOUND){
-            throw new ExistStorageException(resume.getUuid());
-        }
-        storage.add(resume);
-    }
-
-    @Override
-    public Resume get(String uuid) {
-        int index = storage.indexOf(uuid);
-        if(index == RESUME_NOT_FOUND){
-            throw new NotExistStorageException(uuid);
-        }
-        return storage.get(index);
-    }
-
-    @Override
-    public void delete(String uuid) {
-        storage.remove(uuid);
+    protected void deleteElementByIndex(int index) {
+        storage.remove(index);
     }
 
     @Override
     public Resume[] getAll() {
-        return (Resume[]) storage.toArray();
+        return storage.toArray(new Resume[0]);
+    }
+
+    @Override
+    protected Resume getElementByIndex(int index) {
+        return storage.get(index);
+    }
+
+    @Override
+    protected int indexOf(String uuid) {
+        return storage.indexOf(new Resume(uuid));
+    }
+
+    @Override
+    protected void insertElementByIndex(int index, Resume resume) {
+        storage.add(resume);
     }
 
     @Override
     public int size() {
         return storage.size();
+    }
+
+    @Override
+    protected void updateElementByIndex(int index, Resume resume) {
+        storage.set(index, resume);
     }
 }

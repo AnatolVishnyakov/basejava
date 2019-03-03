@@ -7,6 +7,11 @@ import com.basejava.webapp.model.Resume;
  */
 public class ArrayStorage extends AbstractArrayStorage {
     @Override
+    protected void deleteElementByIndex(int index) {
+        storage[index] = storage[size - 1];
+    }
+
+    @Override
     protected int indexOf(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
@@ -17,12 +22,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void insertElement(int index, Resume resume) {
+    protected void insertElementByIndex(int index, Resume resume) {
         storage[size] = resume;
-    }
-
-    @Override
-    protected void deleteElementByIndex(int index) {
-        storage[index] = storage[size - 1];
     }
 }
