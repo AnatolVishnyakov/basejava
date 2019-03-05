@@ -4,12 +4,10 @@ import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-@Ignore(value = "Абстрактный класс AbstractStorageTest игнорируется")
 public class AbstractStorageTest {
     protected static final Resume RESUME_1 = new Resume("uuid1");
     protected static final Resume RESUME_2 = new Resume("uuid2");

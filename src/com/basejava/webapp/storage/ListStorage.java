@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
-    List<Resume> storage = new ArrayList<>();
+    private List<Resume> storage = new ArrayList<>();
 
     @Override
     public void clear() {
@@ -30,7 +30,12 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected int indexOf(String uuid) {
-        return storage.indexOf(new Resume(uuid));
+        for (int i = 0; i < storage.size(); i++) {
+            if(storage.get(i).getUuid().equals(uuid)){
+                return i;
+            }
+        }
+        return RESUME_NOT_FOUND;
     }
 
     @Override
