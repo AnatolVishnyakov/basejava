@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class AbstractStorageTest {
+public abstract class AbstractStorageTest {
     protected static final Resume RESUME_1 = new Resume("uuid1");
     protected static final Resume RESUME_2 = new Resume("uuid2");
     protected static final Resume RESUME_3 = new Resume("uuid3");
