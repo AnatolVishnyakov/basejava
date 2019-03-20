@@ -11,6 +11,18 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected int size = 0;
 
     @Override
+    protected void afterSaveCallback() {
+        size++;
+    }
+
+    @Override
+    protected void beforeSaveCallback(Resume resume) {
+        if (size >= DEFAULT_CAPACITY) {
+            throw new StorageException("Storage overflow.", resume.getUuid());
+        }
+    }
+
+    @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
@@ -31,15 +43,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     @Override
     protected Resume getElementByIndex(int index) {
         return storage[index];
-    }
-
-    @Override
-    public void save(Resume resume) {
-        if (size >= DEFAULT_CAPACITY) {
-            throw new StorageException("Storage overflow.", resume.getUuid());
-        }
-        super.save(resume);
-        size++;
     }
 
     @Override

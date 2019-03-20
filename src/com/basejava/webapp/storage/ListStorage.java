@@ -14,6 +14,14 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
+    protected void afterSaveCallback() {
+    }
+
+    @Override
+    protected void beforeSaveCallback(Resume resume) {
+    }
+
+    @Override
     protected void deleteElementByIndex(int index) {
         storage.remove(index);
     }
@@ -31,7 +39,7 @@ public class ListStorage extends AbstractStorage {
     @Override
     protected int indexOf(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
-            if(storage.get(i).getUuid().equals(uuid)){
+            if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
             }
         }
