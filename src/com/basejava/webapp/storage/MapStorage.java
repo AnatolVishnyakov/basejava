@@ -11,14 +11,6 @@ public class MapStorage extends AbstractStorage {
     private Set<String> keysSet = storage.keySet();
 
     @Override
-    protected void afterSaveCallback() {
-    }
-
-    @Override
-    protected void beforeSaveCallback(Resume resume) {
-    }
-
-    @Override
     protected void deleteElementByIndex(int index) {
         storage.remove(keysSet.toArray()[index]);
     }

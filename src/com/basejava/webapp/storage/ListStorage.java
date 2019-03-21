@@ -14,14 +14,6 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void afterSaveCallback() {
-    }
-
-    @Override
-    protected void beforeSaveCallback(Resume resume) {
-    }
-
-    @Override
     protected void deleteElementByIndex(int index) {
         storage.remove(index);
     }

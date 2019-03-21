@@ -27,14 +27,12 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        beforeSaveCallback(resume);
         int index = indexOf(resume.getUuid());
         if (index > RESUME_NOT_FOUND) {
             throw new ExistStorageException(resume.getUuid());
         } else {
             insertElementByIndex(index, resume);
         }
-        afterSaveCallback();
     }
 
     @Override
@@ -46,10 +44,6 @@ public abstract class AbstractStorage implements Storage {
             updateElementByIndex(index, resume);
         }
     }
-
-    protected abstract void afterSaveCallback();
-
-    protected abstract void beforeSaveCallback(Resume resume);
 
     protected abstract void deleteElementByIndex(int index);
 
