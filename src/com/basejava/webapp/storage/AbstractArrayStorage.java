@@ -16,13 +16,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public void delete(String uuid) {
-        super.delete(uuid);
-        storage[size - 1] = null;
-        size--;
-    }
-
-    @Override
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
