@@ -1,5 +1,6 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -34,4 +35,16 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected void updateElementByIndex(int index, Resume resume) {
         storage[index] = resume;
     }
+
+    @Override
+    protected void insertElementByIndex(int index, Resume resume) {
+        if (size >= DEFAULT_CAPACITY) {
+            throw new StorageException("Storage overflow.", resume.getUuid());
+        }
+        int insertIndex = prepareInsertPosition(index);
+        storage[insertIndex] = resume;
+        size++;
+    }
+
+    protected abstract int prepareInsertPosition(int index);
 }
