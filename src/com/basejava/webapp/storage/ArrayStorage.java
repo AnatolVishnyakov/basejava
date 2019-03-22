@@ -5,10 +5,8 @@ package com.basejava.webapp.storage;
  */
 public class ArrayStorage extends AbstractArrayStorage {
     @Override
-    protected void deleteElementByIndex(int index) {
+    protected void removeResume(int index) {
         storage[index] = storage[size - 1];
-        storage[size - 1] = null;
-        size--;
     }
 
     @Override

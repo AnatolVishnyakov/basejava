@@ -11,6 +11,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected int size = 0;
 
     @Override
+    protected void deleteElementByIndex(int index) {
+        removeResume(index);
+        storage[size - 1] = null;
+        size--;
+    }
+
+    @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
@@ -47,4 +54,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     protected abstract int prepareInsertPosition(int index);
+
+    protected abstract void removeResume(int index);
 }
