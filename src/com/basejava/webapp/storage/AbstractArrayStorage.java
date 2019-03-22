@@ -5,13 +5,13 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage<T extends Integer> extends AbstractStorage<T> {
     protected static final int DEFAULT_CAPACITY = 10_000;
     protected final Resume[] storage = new Resume[DEFAULT_CAPACITY];
     protected int size = 0;
 
     @Override
-    protected void deleteElementByIndex(int index) {
+    protected void deleteElement(T index) {
         removeResume(index);
         storage[size - 1] = null;
         size--;
@@ -29,7 +29,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume getElementByIndex(int index) {
+    protected Resume getElement(T index) {
         return storage[index];
     }
 
@@ -39,12 +39,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateElementByIndex(int index, Resume resume) {
+    protected void updateElement(Integer index, Resume resume) {
         storage[index] = resume;
     }
 
     @Override
-    protected void insertElementByIndex(int index, Resume resume) {
+    protected void insertElement(T index, Resume resume) {
         if (size >= DEFAULT_CAPACITY) {
             throw new StorageException("Storage overflow.", resume.getUuid());
         }
@@ -56,4 +56,16 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract int prepareInsertPosition(int index);
 
     protected abstract void removeResume(int index);
+
+    @Override
+    protected boolean isExist(Integer key) {
+        return key > RESUME_NOT_FOUND;
+    }
+
+    @Override
+    protected T searchKey(String uuid) {
+        return indexOf(uuid);
+    }
+
+    protected abstract T indexOf(String uuid);
 }

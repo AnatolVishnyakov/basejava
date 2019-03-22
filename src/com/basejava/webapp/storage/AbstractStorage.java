@@ -4,54 +4,56 @@ import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
-public abstract class AbstractStorage implements Storage {
+public abstract class AbstractStorage<T> implements Storage {
     protected static final int RESUME_NOT_FOUND = -1;
 
     @Override
     public void delete(String uuid) {
-        int index = indexOf(uuid);
-        if (index <= RESUME_NOT_FOUND) {
+        T key = searchKey(uuid);
+        if (!isExist(key)) {
             throw new NotExistStorageException(uuid);
         } else {
-            deleteElementByIndex(index);
+            deleteElement(key);
         }
     }
 
     public Resume get(String uuid) {
-        int index = indexOf(uuid);
-        if (index <= RESUME_NOT_FOUND) {
+        T key = searchKey(uuid);
+        if (!isExist(key)) {
             throw new NotExistStorageException(uuid);
         }
-        return getElementByIndex(index);
+        return getElement(key);
     }
 
     @Override
     public void save(Resume resume) {
-        int index = indexOf(resume.getUuid());
-        if (index > RESUME_NOT_FOUND) {
+        T key = searchKey(resume.getUuid());
+        if (isExist(key)) {
             throw new ExistStorageException(resume.getUuid());
         } else {
-            insertElementByIndex(index, resume);
+            insertElement(key, resume);
         }
     }
 
     @Override
     public void update(Resume resume) {
-        int index = indexOf(resume.getUuid());
-        if (index <= RESUME_NOT_FOUND) {
+        T key = searchKey(resume.getUuid());
+        if (!isExist(key)) {
             throw new NotExistStorageException(resume.getUuid());
         } else {
-            updateElementByIndex(index, resume);
+            updateElement(key, resume);
         }
     }
 
-    protected abstract void deleteElementByIndex(int index);
+    protected abstract void deleteElement(T key);
 
-    protected abstract Resume getElementByIndex(int index);
+    protected abstract void insertElement(T key, Resume resume);
 
-    protected abstract int indexOf(String uuid);
+    protected abstract boolean isExist(T key);
 
-    protected abstract void insertElementByIndex(int index, Resume resume);
+    protected abstract Resume getElement(T key);
 
-    protected abstract void updateElementByIndex(int index, Resume resume);
+    protected abstract void updateElement(T key, Resume resume);
+
+    protected abstract T searchKey(String uuid);
 }
