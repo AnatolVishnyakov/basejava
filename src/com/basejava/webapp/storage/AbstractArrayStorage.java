@@ -5,13 +5,13 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage<T extends Integer> extends AbstractStorage<T> {
+public abstract class AbstractArrayStorage<K extends Integer, V extends Integer> extends AbstractStorage<K,V> {
     protected static final int DEFAULT_CAPACITY = 10_000;
     protected final Resume[] storage = new Resume[DEFAULT_CAPACITY];
     protected int size = 0;
 
     @Override
-    protected void deleteElement(T index) {
+    protected void deleteElement(V index) {
         removeResume(index);
         storage[size - 1] = null;
         size--;
@@ -29,7 +29,7 @@ public abstract class AbstractArrayStorage<T extends Integer> extends AbstractSt
     }
 
     @Override
-    protected Resume getElement(T index) {
+    protected Resume indexOf(V index) {
         return storage[index];
     }
 
@@ -44,7 +44,7 @@ public abstract class AbstractArrayStorage<T extends Integer> extends AbstractSt
     }
 
     @Override
-    protected void insertElement(T index, Resume resume) {
+    protected void insertElement(K index, Resume resume) {
         if (size >= DEFAULT_CAPACITY) {
             throw new StorageException("Storage overflow.", resume.getUuid());
         }
@@ -63,9 +63,9 @@ public abstract class AbstractArrayStorage<T extends Integer> extends AbstractSt
     }
 
     @Override
-    protected T searchKey(String uuid) {
+    protected V getSearchKey(String uuid) {
         return indexOf(uuid);
     }
 
-    protected abstract T indexOf(String uuid);
+    protected abstract V indexOf(String uuid);
 }

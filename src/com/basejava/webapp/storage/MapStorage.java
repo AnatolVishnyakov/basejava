@@ -2,43 +2,40 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-public class MapStorage extends AbstractStorage {
-    private Map<String, Resume> storage = new LinkedHashMap<>();
-    private Set<String> keysSet = storage.keySet();
+public class MapStorage<K extends String, V extends String> extends AbstractStorage<K,V> {
+    private Map<String, Resume> storage = new HashMap<>();
 
     @Override
-    protected void deleteElementByIndex(int index) {
-        storage.remove(keysSet.toArray()[index]);
+    protected void deleteElement(V uuid) {
+        storage.remove(uuid);
     }
 
     @Override
-    protected Resume getElementByIndex(int index) {
-        return storage.get(keysSet.toArray()[index]);
+    protected Resume indexOf(V uuid) {
+        return storage.get(uuid);
     }
 
     @Override
-    protected int indexOf(String uuid) {
-        String[] keys = storage.keySet().toArray(new String[0]);
-        for (int i = 0; i < keys.length; i++) {
-            if (keys[i].equals(uuid)) {
-                return i;
-            }
-        }
-        return RESUME_NOT_FOUND;
+    protected void insertElement(K uuid, Resume resume) {
+        storage.put(uuid, resume);
     }
 
     @Override
-    protected void insertElementByIndex(int index, Resume resume) {
-        storage.put(resume.getUuid(), resume);
+    protected boolean isExist(V key) {
+        return storage.get(key) != null;
     }
 
     @Override
-    protected void updateElementByIndex(int index, Resume resume) {
-        storage.put(resume.getUuid(), resume);
+    protected void updateElement(V uuid, Resume resume) {
+        storage.put(uuid, resume);
+    }
+
+    @Override
+    protected V getSearchKey(String uuid) {
+        return null;
     }
 
     @Override
