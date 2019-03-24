@@ -5,7 +5,7 @@ import com.basejava.webapp.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListStorage<K extends Integer, V extends Integer> extends AbstractStorage<K,V> {
+public class ListStorage<T extends Integer> extends AbstractStorage<T> {
     private List<Resume> storage = new ArrayList<>();
 
     @Override
@@ -14,28 +14,8 @@ public class ListStorage<K extends Integer, V extends Integer> extends AbstractS
     }
 
     @Override
-    protected void deleteElement(V index) {
+    protected void deleteElement(T index) {
         storage.remove(index.intValue());
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
-    }
-
-    @Override
-    protected Resume indexOf(Integer index) {
-        return storage.get(index);
-    }
-
-    @Override
-    protected V getSearchKey(String uuid) {
-        for (Integer i = 0; i < storage.size(); i++) {
-            if (storage.get(i).getUuid().equals(uuid)) {
-                return (V) i;
-            }
-        }
-        return (V) RESUME_NOT_FOUND;
     }
 
     @Override
@@ -44,17 +24,37 @@ public class ListStorage<K extends Integer, V extends Integer> extends AbstractS
     }
 
     @Override
-    protected boolean isExist(Integer key) {
-        return key > RESUME_NOT_FOUND;
-    }
-
-    @Override
-    public int size() {
-        return storage.size();
+    protected Resume getElement(T key) {
+        return storage.get(key);
     }
 
     @Override
     protected void updateElement(Integer index, Resume resume) {
         storage.set(index, resume);
+    }
+
+    @Override
+    protected boolean isExist(Integer key) {
+        return key > RESUME_NOT_FOUND;
+    }
+
+    @Override
+    protected T getSearchKey(String uuid) {
+        for (Integer i = 0; i < storage.size(); i++) {
+            if (storage.get(i).getUuid().equals(uuid)) {
+                return (T) i;
+            }
+        }
+        return (T) RESUME_NOT_FOUND;
+    }
+
+    @Override
+    public Resume[] getAll() {
+        return storage.toArray(new Resume[0]);
+    }
+
+    @Override
+    public int size() {
+        return storage.size();
     }
 }

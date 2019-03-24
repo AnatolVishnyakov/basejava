@@ -2,41 +2,11 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class MapStorage<K extends String, V extends String> extends AbstractStorage<K,V> {
-    private Map<String, Resume> storage = new HashMap<>();
-
-    @Override
-    protected void deleteElement(V uuid) {
-        storage.remove(uuid);
-    }
-
-    @Override
-    protected Resume indexOf(V uuid) {
-        return storage.get(uuid);
-    }
-
-    @Override
-    protected void insertElement(K uuid, Resume resume) {
-        storage.put(uuid, resume);
-    }
-
-    @Override
-    protected boolean isExist(V key) {
-        return storage.get(key) != null;
-    }
-
-    @Override
-    protected void updateElement(V uuid, Resume resume) {
-        storage.put(uuid, resume);
-    }
-
-    @Override
-    protected V getSearchKey(String uuid) {
-        return null;
-    }
+public class MapStorage<T extends String> extends AbstractStorage<T> {
+    private Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
     public void clear() {
@@ -44,8 +14,39 @@ public class MapStorage<K extends String, V extends String> extends AbstractStor
     }
 
     @Override
+    protected void deleteElement(T key) {
+        storage.remove(key);
+    }
+
+    @Override
+    protected void insertElement(T key, Resume resume) {
+        storage.put(key, resume);
+    }
+
+    @Override
+    protected Resume getElement(T key) {
+        return storage.get(key);
+    }
+
+    @Override
+    protected void updateElement(T key, Resume resume) {
+        storage.put(key, resume);
+    }
+
+    @Override
+    protected boolean isExist(T key) {
+        return storage.get(key) != null;
+    }
+
+    @Override
+    protected T getSearchKey(String uuid) {
+        return (T) uuid;
+    }
+
+    @Override
     public Resume[] getAll() {
-        return storage.values().toArray(new Resume[0]);
+        return storage.values()
+                .toArray(new Resume[0]);
     }
 
     @Override
