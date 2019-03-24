@@ -14,8 +14,8 @@ public class ListStorage<T extends Integer> extends AbstractStorage<T> {
     }
 
     @Override
-    protected void deleteElement(T index) {
-        storage.remove(index.intValue());
+    protected void deleteElement(T key) {
+        storage.remove(key.intValue());
     }
 
     @Override

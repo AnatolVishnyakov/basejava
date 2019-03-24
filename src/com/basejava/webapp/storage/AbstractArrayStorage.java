@@ -17,8 +17,8 @@ public abstract class AbstractArrayStorage<T extends Integer> extends AbstractSt
     }
 
     @Override
-    protected void deleteElement(T index) {
-        removeResume(index);
+    protected void deleteElement(T key) {
+        removeResume(key);
         storage[size - 1] = null;
         size--;
     }
