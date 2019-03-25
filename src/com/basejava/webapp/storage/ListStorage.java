@@ -14,8 +14,8 @@ public class ListStorage<T extends Integer> extends AbstractStorage<T> {
     }
 
     @Override
-    protected void deleteElement(T key) {
-        storage.remove(key.intValue());
+    protected void deleteElement(T index) {
+        storage.remove(index.intValue());
     }
 
     @Override
@@ -24,8 +24,8 @@ public class ListStorage<T extends Integer> extends AbstractStorage<T> {
     }
 
     @Override
-    protected Resume getElement(T key) {
-        return storage.get(key);
+    protected Resume getElement(T index) {
+        return storage.get(index);
     }
 
     @Override
@@ -34,8 +34,8 @@ public class ListStorage<T extends Integer> extends AbstractStorage<T> {
     }
 
     @Override
-    protected boolean isExist(Integer key) {
-        return key > RESUME_NOT_FOUND;
+    protected boolean isExist(Integer index) {
+        return index != null && storage.get(index) != null;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ListStorage<T extends Integer> extends AbstractStorage<T> {
                 return (T) i;
             }
         }
-        return (T) RESUME_NOT_FOUND;
+        return null;
     }
 
     @Override

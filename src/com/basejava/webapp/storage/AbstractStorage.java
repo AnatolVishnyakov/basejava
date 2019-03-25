@@ -5,8 +5,6 @@ import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 public abstract class AbstractStorage<T> implements Storage {
-    protected static final Integer RESUME_NOT_FOUND = -1;
-
     @Override
     public void delete(String uuid) {
         T key = getSearchKey(uuid);
@@ -17,6 +15,7 @@ public abstract class AbstractStorage<T> implements Storage {
         }
     }
 
+    @Override
     public Resume get(String uuid) {
         T key = getSearchKey(uuid);
         if (!isExist(key)) {
