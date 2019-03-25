@@ -5,8 +5,8 @@ import com.basejava.webapp.model.Resume;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class MapStorage<T extends String> extends AbstractStorage<T> {
-    private Map<String, Resume> storage = new LinkedHashMap<>();
+public class MapStorage extends AbstractStorage<String> {
+    private final Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
     public void clear() {
@@ -14,33 +14,33 @@ public class MapStorage<T extends String> extends AbstractStorage<T> {
     }
 
     @Override
-    protected void deleteElement(T key) {
+    protected void deleteElement(String key) {
         storage.remove(key);
     }
 
     @Override
-    protected void insertElement(T key, Resume resume) {
+    protected void insertElement(String key, Resume resume) {
         storage.put(key, resume);
     }
 
     @Override
-    protected Resume getElement(T key) {
+    protected Resume getElement(String key) {
         return storage.get(key);
     }
 
     @Override
-    protected void updateElement(T key, Resume resume) {
+    protected void updateElement(String key, Resume resume) {
         storage.put(key, resume);
     }
 
     @Override
-    protected boolean isExist(T key) {
-        return storage.get(key) != null;
+    protected boolean isExist(String key) {
+        return storage.containsKey(key);
     }
 
     @Override
-    protected T getSearchKey(String uuid) {
-        return (T) uuid;
+    protected String getSearchKey(String uuid) {
+        return uuid;
     }
 
     @Override

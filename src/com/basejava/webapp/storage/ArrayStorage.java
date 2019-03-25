@@ -5,7 +5,7 @@ package com.basejava.webapp.storage;
  */
 public class ArrayStorage extends AbstractArrayStorage {
     @Override
-    protected Integer indexOf(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         for (Integer i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;

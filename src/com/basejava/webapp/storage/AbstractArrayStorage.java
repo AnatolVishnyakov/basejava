@@ -46,12 +46,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     @Override
     protected boolean isExist(Integer key) {
-        return key.intValue() > RESUME_NOT_FOUND;
-    }
-
-    @Override
-    protected Integer getSearchKey(String uuid) {
-        return indexOf(uuid);
+        return key > RESUME_NOT_FOUND;
     }
 
     @Override
@@ -63,8 +58,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     public int size() {
         return size;
     }
-
-    protected abstract Integer indexOf(String uuid);
 
     protected abstract int prepareInsertPosition(int index);
 

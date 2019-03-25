@@ -5,8 +5,8 @@ import com.basejava.webapp.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListStorage<T extends Integer> extends AbstractStorage<T> {
-    private List<Resume> storage = new ArrayList<>();
+public class ListStorage extends AbstractStorage<Integer> {
+    private final List<Resume> storage = new ArrayList<>();
 
     @Override
     public void clear() {
@@ -14,7 +14,7 @@ public class ListStorage<T extends Integer> extends AbstractStorage<T> {
     }
 
     @Override
-    protected void deleteElement(T index) {
+    protected void deleteElement(Integer index) {
         storage.remove(index.intValue());
     }
 
@@ -24,7 +24,7 @@ public class ListStorage<T extends Integer> extends AbstractStorage<T> {
     }
 
     @Override
-    protected Resume getElement(T index) {
+    protected Resume getElement(Integer index) {
         return storage.get(index);
     }
 
@@ -39,10 +39,10 @@ public class ListStorage<T extends Integer> extends AbstractStorage<T> {
     }
 
     @Override
-    protected T getSearchKey(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         for (Integer i = 0; i < storage.size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
-                return (T) i;
+                return i;
             }
         }
         return null;
