@@ -4,7 +4,11 @@ import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
+import java.util.Comparator;
+
 public abstract class AbstractStorage<T> implements Storage {
+    protected static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName);
+
     @Override
     public void delete(String uuid) {
         T key = getSearchKey(uuid);

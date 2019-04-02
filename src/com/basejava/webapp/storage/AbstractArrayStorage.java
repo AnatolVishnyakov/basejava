@@ -4,6 +4,7 @@ import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int DEFAULT_CAPACITY = 10_000;
@@ -50,8 +51,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
+    public List<Resume> getAllSorted() {
+        List<Resume> storageList = Arrays.asList(Arrays.copyOf(storage, size));
+        storageList.sort(RESUME_COMPARATOR);
+        return storageList;
     }
 
     @Override

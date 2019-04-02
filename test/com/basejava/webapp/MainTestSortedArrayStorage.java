@@ -23,7 +23,7 @@ public class MainTestSortedArrayStorage {
 
     private static void printAll() {
         System.out.print("PRINT ALL: ");
-        Arrays.stream(STORAGE.getAll())
+        STORAGE.getAllSorted()
                 .forEach(r -> System.out.print(r.getUuid() + " "));
     }
 

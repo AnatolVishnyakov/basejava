@@ -6,12 +6,16 @@ import com.basejava.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 public abstract class AbstractStorageTest {
-    protected static final Resume RESUME_1 = new Resume("uuid1");
-    protected static final Resume RESUME_2 = new Resume("uuid2");
-    protected static final Resume RESUME_3 = new Resume("uuid3");
+    protected static final Resume RESUME_1 = new Resume("uuid1", "Ivanov Ivan Ivanovich");
+    protected static final Resume RESUME_2 = new Resume("uuid2", "Petrov Petr Petrovich");
+    protected static final Resume RESUME_3 = new Resume("uuid3", "Sidorov Michael Nikolaevich");
     protected Storage storage;
 
     protected AbstractStorageTest(Storage storage) {
@@ -34,9 +38,9 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAll() {
-        Resume[] actualValue = storage.getAll();
-        assertEquals(3, actualValue.length);
-        assertArrayEquals(new Resume[]{RESUME_1, RESUME_2, RESUME_3}, actualValue);
+        List<Resume> actualValue = storage.getAllSorted();
+        assertEquals(3, actualValue.size());
+        assertEquals(Arrays.asList(RESUME_1, RESUME_2, RESUME_3), actualValue);
     }
 
     @Test
