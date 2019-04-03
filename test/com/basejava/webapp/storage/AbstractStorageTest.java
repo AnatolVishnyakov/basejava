@@ -7,6 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -15,7 +17,10 @@ import static org.junit.Assert.assertSame;
 public abstract class AbstractStorageTest {
     protected static final Resume RESUME_1 = new Resume("uuid1", "Ivanov Ivan Ivanovich");
     protected static final Resume RESUME_2 = new Resume("uuid2", "Petrov Petr Petrovich");
-    protected static final Resume RESUME_3 = new Resume("uuid3", "Sidorov Michael Nikolaevich");
+    protected static final Resume RESUME_3 = new Resume("uuid3", "Ivanov Ivan Ivanovich");
+    protected static final Comparator<Resume> RESUME_COMPARATOR = Comparator
+            .comparing(Resume::getFullName)
+            .thenComparing(Resume::getUuid);
     protected Storage storage;
 
     protected AbstractStorageTest(Storage storage) {
@@ -40,7 +45,10 @@ public abstract class AbstractStorageTest {
     public void getAll() {
         List<Resume> actualValue = storage.getAllSorted();
         assertEquals(3, actualValue.size());
-        assertEquals(Arrays.asList(RESUME_1, RESUME_2, RESUME_3), actualValue);
+        List<Resume> expected = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        Collections.sort(expected, RESUME_COMPARATOR);
+
+        assertEquals(expected, actualValue);
     }
 
     @Test

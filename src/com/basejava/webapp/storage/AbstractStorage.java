@@ -7,7 +7,9 @@ import com.basejava.webapp.model.Resume;
 import java.util.Comparator;
 
 public abstract class AbstractStorage<T> implements Storage {
-    protected static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName);
+    protected static final Comparator<Resume> RESUME_COMPARATOR = Comparator
+            .comparing(Resume::getFullName)
+            .thenComparing(Resume::getUuid);
 
     @Override
     public void delete(String uuid) {
