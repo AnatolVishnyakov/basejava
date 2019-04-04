@@ -19,6 +19,6 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
         } catch (StorageException e) {
             Assert.fail();
         }
-        storage.save(new Resume());
+        storage.save(new Resume("uuid-10001"));
     }
 }

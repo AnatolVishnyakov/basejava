@@ -5,6 +5,7 @@ import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.Comparator;
+import java.util.List;
 
 public abstract class AbstractStorage<T> implements Storage {
     protected static final Comparator<Resume> RESUME_COMPARATOR = Comparator
@@ -13,42 +14,33 @@ public abstract class AbstractStorage<T> implements Storage {
 
     @Override
     public void delete(String uuid) {
-        T key = getSearchKey(uuid);
-        if (!isExist(key)) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            deleteElement(key);
-        }
+        T key = getSearchKeyIfExistResume(uuid);
+        deleteElement(key);
     }
 
     @Override
     public Resume get(String uuid) {
-        T key = getSearchKey(uuid);
-        if (!isExist(key)) {
-            throw new NotExistStorageException(uuid);
-        }
+        T key = getSearchKeyIfExistResume(uuid);
         return getElement(key);
     }
 
     @Override
     public void save(Resume resume) {
-        String uuid = resume.getUuid();
-        T key = getSearchKey(uuid);
-        if (isExist(key)) {
-            throw new ExistStorageException(resume.getUuid());
-        } else {
-            insertElement(key, resume);
-        }
+        T key = getSearchKeyIfNotExistResume(resume.getUuid());
+        insertElement(key, resume);
     }
 
     @Override
     public void update(Resume resume) {
-        T key = getSearchKey(resume.getUuid());
-        if (!isExist(key)) {
-            throw new NotExistStorageException(resume.getUuid());
-        } else {
-            updateElement(key, resume);
-        }
+        T key = getSearchKeyIfExistResume(resume.getUuid());
+        updateElement(key, resume);
+    }
+
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> storageList = convertToListStorage();
+        storageList.sort(RESUME_COMPARATOR);
+        return storageList;
     }
 
     protected abstract void deleteElement(T key);
@@ -62,4 +54,22 @@ public abstract class AbstractStorage<T> implements Storage {
     protected abstract boolean isExist(T key);
 
     protected abstract T getSearchKey(String uuid);
+
+    protected abstract List<Resume> convertToListStorage();
+
+    private T getSearchKeyIfExistResume(String uuid) {
+        T key = getSearchKey(uuid);
+        if (!isExist(key)) {
+            throw new NotExistStorageException(uuid);
+        }
+        return key;
+    }
+
+    private T getSearchKeyIfNotExistResume(String uuid) {
+        T key = getSearchKey(uuid);
+        if (isExist(key)) {
+            throw new ExistStorageException(uuid);
+        }
+        return key;
+    }
 }

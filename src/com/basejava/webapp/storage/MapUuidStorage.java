@@ -3,12 +3,12 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MapUuidStorage extends AbstractStorage<String> {
-    private final Map<String, Resume> storage = new LinkedHashMap<>();
+    private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
     public void clear() {
@@ -16,28 +16,28 @@ public class MapUuidStorage extends AbstractStorage<String> {
     }
 
     @Override
-    protected void deleteElement(String key) {
-        storage.remove(key);
+    protected void deleteElement(String searchKey) {
+        storage.remove(searchKey);
     }
 
     @Override
-    protected void insertElement(String key, Resume resume) {
-        storage.put(key, resume);
+    protected void insertElement(String searchKey, Resume resume) {
+        storage.put(searchKey, resume);
     }
 
     @Override
-    protected Resume getElement(String key) {
-        return storage.get(key);
+    protected Resume getElement(String searchKey) {
+        return storage.get(searchKey);
     }
 
     @Override
-    protected void updateElement(String key, Resume resume) {
-        storage.put(key, resume);
+    protected void updateElement(String searchKey, Resume resume) {
+        storage.put(searchKey, resume);
     }
 
     @Override
-    protected boolean isExist(String key) {
-        return storage.containsKey(key);
+    protected boolean isExist(String searchKey) {
+        return storage.containsKey(searchKey);
     }
 
     @Override
@@ -46,10 +46,8 @@ public class MapUuidStorage extends AbstractStorage<String> {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> storageList = new ArrayList<>(storage.values());
-        storageList.sort(RESUME_COMPARATOR);
-        return storageList;
+    protected List<Resume> convertToListStorage() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override

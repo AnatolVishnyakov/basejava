@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -18,10 +17,11 @@ public abstract class AbstractStorageTest {
     protected static final Resume RESUME_1 = new Resume("uuid1", "Ivanov Ivan Ivanovich");
     protected static final Resume RESUME_2 = new Resume("uuid2", "Petrov Petr Petrovich");
     protected static final Resume RESUME_3 = new Resume("uuid3", "Ivanov Ivan Ivanovich");
+    protected static final Resume RESUME_4 = new Resume("uuid4", "Sidorov Ivan Ivanovich");
     protected static final Comparator<Resume> RESUME_COMPARATOR = Comparator
             .comparing(Resume::getFullName)
             .thenComparing(Resume::getUuid);
-    protected Storage storage;
+    protected final Storage storage;
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -42,45 +42,41 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() {
+    public void getAllSorted() {
         List<Resume> actualValue = storage.getAllSorted();
         assertEquals(3, actualValue.size());
         List<Resume> expected = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
-        Collections.sort(expected, RESUME_COMPARATOR);
+        expected.sort(RESUME_COMPARATOR);
 
         assertEquals(expected, actualValue);
     }
 
     @Test
     public void update() {
-        Resume r1 = new Resume("uuid1");
-        storage.update(r1);
-        Resume r2 = new Resume("uuid2");
-        storage.update(r2);
-        Resume r3 = new Resume("uuid3");
-        storage.update(r3);
+        Resume expectedResume = new Resume("uuid1");
+        expectedResume.setFullName("Francisco Domingo Carlos Andres Sebastian D'anconia");
+        storage.update(expectedResume);
 
-        assertSame(r1, storage.get("uuid1"));
-        assertSame(r2, storage.get("uuid2"));
-        assertSame(r3, storage.get("uuid3"));
+        Resume actualResume = storage.get("uuid1");
+        assertSame(expectedResume, actualResume);
+        assertEquals(expectedResume.getFullName(), actualResume.getFullName());
     }
 
     @Test(expected = NotExistStorageException.class)
     public void updateNotExist() {
-        storage.update(new Resume("uuid4"));
+        storage.update(RESUME_4);
     }
 
     @Test
     public void save() {
-        Resume resume4 = new Resume("uuid4");
-        storage.save(resume4);
+        storage.save(RESUME_4);
         assertEquals(4, storage.size());
-        assertSame(resume4, storage.get("uuid4"));
+        assertSame(RESUME_4, storage.get("uuid4"));
     }
 
     @Test(expected = ExistStorageException.class)
     public void saveExist() {
-        storage.save(new Resume("uuid3"));
+        storage.save(RESUME_3);
     }
 
     @Test(expected = NotExistStorageException.class)
