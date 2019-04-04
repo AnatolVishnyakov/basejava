@@ -50,7 +50,7 @@ public class ListStorage extends AbstractStorage<Integer> {
 
     @Override
     protected List<Resume> convertToListStorage() {
-        return storage;
+        return new ArrayList<>(storage);
     }
 
     @Override

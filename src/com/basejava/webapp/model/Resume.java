@@ -1,6 +1,7 @@
 package com.basejava.webapp.model;
 
-import java.util.Objects;
+import java.util.Comparator;
+import java.util.UUID;
 
 /**
  * Initial resume class
@@ -9,12 +10,13 @@ public class Resume implements Comparable<Resume> {
     private String uuid;
     private String fullName;
 
-    public Resume(String uuid) {
-        this.uuid = uuid;
+    public Resume(String fullName) {
+        this.uuid = UUID.randomUUID().toString();
+        this.fullName = fullName;
     }
 
     public Resume(String uuid, String fullName) {
-        this(uuid);
+        this.uuid = uuid;
         this.fullName = fullName;
     }
 
@@ -48,8 +50,7 @@ public class Resume implements Comparable<Resume> {
             return false;
         }
         Resume resume = (Resume) o;
-        return Objects.equals(uuid, resume.uuid) &&
-                Objects.equals(fullName, resume.getFullName());
+        return uuid.equals(resume.uuid);
     }
 
     @Override
@@ -59,6 +60,7 @@ public class Resume implements Comparable<Resume> {
 
     @Override
     public int compareTo(Resume o) {
-        return uuid.compareTo(o.getUuid());
+        return Comparator.comparing(Resume::getUuid)
+                .compare(this, o);
     }
 }

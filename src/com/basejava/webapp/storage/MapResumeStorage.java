@@ -32,7 +32,7 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected boolean isExist(Object resume) {
-        return resume != null && storage.containsKey(((Resume) resume).getUuid());
+        return resume != null;
     }
 
     @Override
