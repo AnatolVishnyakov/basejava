@@ -18,7 +18,7 @@ public abstract class AbstractStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
-    protected static final Resume RESUME_1 = new Resume(UUID_1, "");
+    protected static final Resume RESUME_1 = new Resume(UUID_1, "Frank Rearden");
     protected static final Resume RESUME_2 = new Resume(UUID_2, "Petrov Petr Petrovich");
     protected static final Resume RESUME_3 = new Resume(UUID_3, "Ivanov Ivan Ivanovich");
     protected static final Resume RESUME_4 = new Resume(UUID_4, "Sidorov Ivan Ivanovich");
@@ -62,7 +62,6 @@ public abstract class AbstractStorageTest {
 
         Resume actualResume = storage.get(UUID_1);
         assertSame(expectedResume, actualResume);
-        assertEquals(expectedResume.getFullName(), actualResume.getFullName());
     }
 
     @Test(expected = NotExistStorageException.class)
