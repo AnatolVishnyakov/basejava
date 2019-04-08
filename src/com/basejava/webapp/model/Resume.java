@@ -1,20 +1,23 @@
 package com.basejava.webapp.model;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
  * Initial resume class
  */
 public class Resume implements Comparable<Resume> {
-    private String uuid;
-    private String fullName;
+    private final String uuid;
+    private final String fullName;
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
     }
 
     public Resume(String uuid, String fullName) {
+        Objects.requireNonNull(uuid, "uuid must not be null");
+        Objects.requireNonNull(fullName, "fullName must not be null");
         this.uuid = uuid;
         this.fullName = fullName;
     }
@@ -23,21 +26,13 @@ public class Resume implements Comparable<Resume> {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
     public String getFullName() {
         return fullName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
     @Override
     public String toString() {
-        return uuid;
+        return String.format("UUID: %s FULL_NAME: %s", uuid, fullName);
     }
 
     @Override
@@ -61,6 +56,7 @@ public class Resume implements Comparable<Resume> {
     @Override
     public int compareTo(Resume o) {
         return Comparator.comparing(Resume::getUuid)
+                .thenComparing(Resume::getFullName)
                 .compare(this, o);
     }
 }
