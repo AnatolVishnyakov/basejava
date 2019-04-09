@@ -1,8 +1,6 @@
 package com.basejava.webapp.model;
 
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -10,6 +8,13 @@ import java.util.UUID;
 public class Resume implements Comparable<Resume> {
     private final String uuid;
     private final String fullName;
+    private final SectionType personal = SectionType.PERSONAL;
+    private final SectionType objective = SectionType.OBJECTIVE;
+    private final SectionType achievement = SectionType.ACHIEVEMENT;
+    private final SectionType qualifications = SectionType.QUALIFICATIONS;
+    private final SectionType experience = SectionType.EXPERIENCE;
+    private final SectionType education = SectionType.EDUCATION;
+    private final List<Contact> contacts = new ArrayList<Contact>();
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
