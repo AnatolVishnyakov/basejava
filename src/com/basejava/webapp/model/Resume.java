@@ -1,5 +1,10 @@
 package com.basejava.webapp.model;
 
+import com.basejava.webapp.model.contact.Contact;
+import com.basejava.webapp.model.contact.ContactType;
+import com.basejava.webapp.model.section.Section;
+import com.basejava.webapp.model.section.SectionType;
+
 import java.util.*;
 
 /**
@@ -8,13 +13,8 @@ import java.util.*;
 public class Resume implements Comparable<Resume> {
     private final String uuid;
     private final String fullName;
-    private final SectionType personal = SectionType.PERSONAL;
-    private final SectionType objective = SectionType.OBJECTIVE;
-    private final SectionType achievement = SectionType.ACHIEVEMENT;
-    private final SectionType qualifications = SectionType.QUALIFICATIONS;
-    private final SectionType experience = SectionType.EXPERIENCE;
-    private final SectionType education = SectionType.EDUCATION;
-    private final List<Contact> contacts = new ArrayList<Contact>();
+    private final Map<SectionType, Section> sections = new HashMap<>();
+    private final List<Contact> contacts = new ArrayList<>();
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -63,5 +63,38 @@ public class Resume implements Comparable<Resume> {
         return Comparator.comparing(Resume::getUuid)
                 .thenComparing(Resume::getFullName)
                 .compare(this, o);
+    }
+
+    public void addContact(ContactType contactType, String contact) {
+        contacts.add(new Contact(contactType, contact));
+    }
+
+    public void addPosition(String position) {
+        Section positions = sections.get(SectionType.OBJECTIVE);
+        positions.add(position);
+    }
+
+    public void addPersonal(String personal) {
+        Section personals = sections.get(SectionType.PERSONAL);
+        personals.add(personal);
+    }
+
+    public void addAchievement(String achievement) {
+        Section achievements = sections.get(SectionType.ACHIEVEMENT);
+        achievements.add(achievement);
+    }
+
+    public void addQualification(String qualification) {
+        Section qualifications = sections.get(SectionType.QUALIFICATIONS);
+        qualifications.add(qualification);
+    }
+
+    public void addExperience(String title, String duration, String experience) {
+        Section experiences = sections.get(SectionType.EXPERIENCE);
+        experiences.add(title, duration, experience);
+    }
+
+    public List<Contact> getContacts() {
+        return contacts;
     }
 }
