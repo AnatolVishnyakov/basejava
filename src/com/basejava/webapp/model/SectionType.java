@@ -1,4 +1,4 @@
-package com.basejava.webapp.model.section;
+package com.basejava.webapp.model;
 
 public enum SectionType {
     PERSONAL("Личные качества"),

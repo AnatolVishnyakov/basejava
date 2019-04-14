@@ -1,10 +1,5 @@
 package com.basejava.webapp.model;
 
-import com.basejava.webapp.model.contact.Contact;
-import com.basejava.webapp.model.contact.ContactType;
-import com.basejava.webapp.model.section.Section;
-import com.basejava.webapp.model.section.SectionType;
-
 import java.util.*;
 
 /**
@@ -14,10 +9,16 @@ public class Resume implements Comparable<Resume> {
     private final String uuid;
     private final String fullName;
     private final Map<SectionType, Section> sections = new HashMap<>();
-    private final List<Contact> contacts = new ArrayList<>();
+    private final Map<ContactType, Contact> contacts = new HashMap<>();
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
+        sections.put(SectionType.PERSONAL, new TextSection());
+        sections.put(SectionType.OBJECTIVE, new TextSection());
+        sections.put(SectionType.ACHIEVEMENT, new QualificationSection());
+        sections.put(SectionType.QUALIFICATIONS, new QualificationSection());
+        sections.put(SectionType.EXPERIENCE, new ExperienceSection());
+        sections.put(SectionType.EDUCATION, new ExperienceSection());
     }
 
     public Resume(String uuid, String fullName) {
@@ -66,7 +67,7 @@ public class Resume implements Comparable<Resume> {
     }
 
     public void addContact(ContactType contactType, String contact) {
-        contacts.add(new Contact(contactType, contact));
+        contacts.put(contactType, new Contact(contact));
     }
 
     public void addPosition(String position) {
@@ -91,10 +92,15 @@ public class Resume implements Comparable<Resume> {
 
     public void addExperience(String title, String duration, String experience) {
         Section experiences = sections.get(SectionType.EXPERIENCE);
-        experiences.add(title, duration, experience);
+        experiences.add(String.format("%s | %s | %s", title, duration, experience));
     }
 
-    public List<Contact> getContacts() {
+    public void addEducation(String title, String duration, String courseName) {
+        Section education = sections.get(SectionType.EDUCATION);
+        education.add(String.format("%s | %s | %s", title, duration, courseName));
+    }
+
+    public Map<ContactType, Contact> getContacts() {
         return contacts;
     }
 }

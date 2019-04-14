@@ -1,23 +1,16 @@
 package com.basejava.webapp.model;
 
-import com.basejava.webapp.model.contact.Contact;
-import com.basejava.webapp.model.contact.ContactType;
-
 public class ResumeTestData {
     public static void main(String[] args) {
         Resume resume = new Resume("Ivanov Ivan Ivanovich");
         resume.addContact(ContactType.PHONE, "+7(123) 001-1234");
         resume.addContact(ContactType.SKYPE, "user.test");
         resume.addContact(ContactType.EMAIL, "usertest@yandex.ru");
-        resume.addContact(ContactType.LINKEDIN, "");
-        resume.addContact(ContactType.GITHUB, "");
-        resume.addContact(ContactType.STACKOVERFLOW, "");
-        resume.addContact(ContactType.WEBSITE, "");
+        resume.addContact(ContactType.LINKEDIN, null);
+        resume.addContact(ContactType.GITHUB, null);
+        resume.addContact(ContactType.STACKOVERFLOW, null);
+        resume.addContact(ContactType.WEBSITE, null);
 
-        for(Contact contact: resume.getContacts()) {
-            System.out.println(contact);
-        }
-/*
         // Позиция
         resume.addPosition("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         // Личные качества
@@ -46,9 +39,25 @@ public class ResumeTestData {
         resume.addQualification("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектирования, архитектурных шаблонов, UML, функционального программирования");
         resume.addQualification("Родной русский, английский \"upper intermediate\"");
         // Опыт работы
-        resume.addExperience(title, "10/2013 - Сейчас", "Автор проекта.\n" +
-                "Создание, организация и проведение Java онлайн проектов и стажировок.");
-        resume.addExperience("");
-*/
+        resume.addExperience("Java Online Projects", "10/2013 - Сейчас", "Автор проекта. Создание, организация и проведение Java онлайн проектов и стажировок.");
+        resume.addExperience("Wrike", "10/2014 - 01/2016", "Старший разработчик (backend). Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
+        resume.addExperience("RIT Center", "04/2012 - 10/2014", "Java архитектор. Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python");
+        resume.addExperience("Luxoft (Deutsche Bank)", "12/2010 - 04/2012", "Ведущий программист. Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5.");
+        resume.addExperience("Yota", "06/2008 - 12/2010", "Ведущий специалист\n" +
+                "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" (GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, JMX, JMS, Maven2). Реализация администрирования, статистики и мониторинга фреймворка. Разработка online JMX клиента (Python/ Jython, Django, ExtJS)");
+        resume.addExperience("Enkata", "03/2007 - 06/2008", "Разработчик ПО\n" +
+                "Реализация клиентской (Eclipse RCP) и серверной (JBoss 4.2, Hibernate 3.0, Tomcat, JMS) частей кластерного J2EE приложения (OLAP, Data mining).");
+        resume.addExperience("Siemens AG", "01/2005 - 02/2007", "Разработчик ПО\n" +
+                "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на мобильной IN платформе Siemens @vantage (Java, Unix).");
+        resume.addExperience("Alcatel", "09/1997 - 01/2005", "Инженер по аппаратному и программному тестированию\n" +
+                "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM).");
+        // Образование
+        resume.addEducation("Coursera", "03/2013 - 05/2013", "\t\"Functional Programming Principles in Scala\" by Martin Odersky");
+        resume.addEducation("Luxoft", "03/2011 - 04/2011", "Курс \"Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.\"");
+        resume.addEducation("Siemens AG", "01/2005 - 04/2005", "3 месяца обучения мобильным IN сетям (Берлин)");
+        resume.addEducation("Alcatel", "09/1997 - 03/1998", "6 месяцев обучения цифровым телефонным сетям (Москва)");
+        resume.addEducation("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "09/1993 - 07/1996", "Аспирантура (программист С, С++)");
+        resume.addEducation("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "09/1987 - 07/1993", "Инженер (программист Fortran, C)");
+        resume.addEducation("Заочная физико-техническая школа при МФТИ", "09/1984 - 06/1987", "Закончил с отличием");
     }
 }
