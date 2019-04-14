@@ -14,8 +14,8 @@
 **Ресурсы:**
 - <a href="http://www.duct-tape-architect.ru/?p=315">XML формат и технологии</a>
 - Wiki: <a href="https://ru.wikipedia.org/wiki/XML">XML</a>, <a href="https://ru.wikipedia.org/wiki/XSL">XSL</a> , <a href="https://ru.wikipedia.org/wiki/Document_Object_Model">DOM</a>, <a href="https://ru.wikipedia.org/wiki/SAX">SAX</a>, <a href="https://en.wikipedia.org/wiki/StAX">StAX</a>, <a href="https://ru.wikipedia.org/wiki/Java_Architecture_for_XML_Binding">JAXB</a>
-- <a href="http://www.vogella.com/tutorials/JavaXML/article.html">Работа с XML в Java</a>. Реализация хранения в XML.
-
+- <a href="http://www.vogella.com/tutorials/JavaXML/article.html">Работа с XML в Java</a>. Реализация хранения в XML. 
+ 
 ## ![video](https://cloud.githubusercontent.com/assets/13649199/13672715/06dbc6ce-e6e7-11e5-81a9-04fbddb9e488.png) [2. JSON](https://drive.google.com/open?id=0B_4NpoQW1xfpRUlvMU54a2hMR3c)
 **Коммиты:**
 - [`Lesson10 json`](https://github.com/JavaWebinar/basejava/tree/ba409e3666f1a5086182a736784c4362a1979b7f)
