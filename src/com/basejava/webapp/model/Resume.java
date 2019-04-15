@@ -15,10 +15,10 @@ public class Resume implements Comparable<Resume> {
         this(UUID.randomUUID().toString(), fullName);
         sections.put(SectionType.PERSONAL, new TextSection());
         sections.put(SectionType.OBJECTIVE, new TextSection());
-        sections.put(SectionType.ACHIEVEMENT, new QualificationSection());
-        sections.put(SectionType.QUALIFICATIONS, new QualificationSection());
-        sections.put(SectionType.EXPERIENCE, new ExperienceSection());
-        sections.put(SectionType.EDUCATION, new ExperienceSection());
+        sections.put(SectionType.ACHIEVEMENT, new ListSection());
+        sections.put(SectionType.QUALIFICATIONS, new ListSection());
+        sections.put(SectionType.EXPERIENCE, new InstitutionSection());
+        sections.put(SectionType.EDUCATION, new InstitutionSection());
     }
 
     public Resume(String uuid, String fullName) {

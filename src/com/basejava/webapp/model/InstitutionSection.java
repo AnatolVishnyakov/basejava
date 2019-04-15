@@ -1,6 +1,6 @@
 package com.basejava.webapp.model;
 
-public class ExperienceSection extends Section {
+public class InstitutionSection extends Section {
     private String title;
     private String duration;
     private String experience;

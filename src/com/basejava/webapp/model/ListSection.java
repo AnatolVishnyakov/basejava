@@ -3,7 +3,7 @@ package com.basejava.webapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QualificationSection extends Section {
+public class ListSection extends Section {
     private List<String> content = new ArrayList<>();
 
     @Override
