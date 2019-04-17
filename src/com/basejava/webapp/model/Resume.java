@@ -13,12 +13,6 @@ public class Resume implements Comparable<Resume> {
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
-        sections.put(SectionType.PERSONAL, new TextSection());
-        sections.put(SectionType.OBJECTIVE, new TextSection());
-        sections.put(SectionType.ACHIEVEMENT, new ListSection());
-        sections.put(SectionType.QUALIFICATIONS, new ListSection());
-        sections.put(SectionType.EXPERIENCE, new InstitutionSection());
-        sections.put(SectionType.EDUCATION, new InstitutionSection());
     }
 
     public Resume(String uuid, String fullName) {
@@ -70,34 +64,8 @@ public class Resume implements Comparable<Resume> {
         contacts.put(contactType, new Contact(contact));
     }
 
-    public void addPosition(String position) {
-        Section positions = sections.get(SectionType.OBJECTIVE);
-        positions.add(position);
-    }
-
-    public void addPersonal(String personal) {
-        Section personals = sections.get(SectionType.PERSONAL);
-        personals.add(personal);
-    }
-
-    public void addAchievement(String achievement) {
-        Section achievements = sections.get(SectionType.ACHIEVEMENT);
-        achievements.add(achievement);
-    }
-
-    public void addQualification(String qualification) {
-        Section qualifications = sections.get(SectionType.QUALIFICATIONS);
-        qualifications.add(qualification);
-    }
-
-    public void addExperience(String title, String duration, String experience) {
-        Section experiences = sections.get(SectionType.EXPERIENCE);
-        experiences.add(String.format("%s | %s | %s", title, duration, experience));
-    }
-
-    public void addEducation(String title, String duration, String courseName) {
-        Section education = sections.get(SectionType.EDUCATION);
-        education.add(String.format("%s | %s | %s", title, duration, courseName));
+    public void setSection(SectionType sectionType, Section section) {
+        sections.put(sectionType, section);
     }
 
     public Map<ContactType, Contact> getContacts() {
