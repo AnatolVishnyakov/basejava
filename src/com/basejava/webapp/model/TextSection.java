@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Секции "Позиция" и "Личные качества"
  */
-public class TextSection extends Section {
+public class TextSection extends AbstractSection {
     private String content;
 
     public TextSection(String content) {

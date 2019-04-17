@@ -3,10 +3,10 @@ package com.basejava.webapp.model;
 import java.util.List;
 import java.util.Objects;
 
-public class ListSection extends Section {
+public class ListAbstractSection extends AbstractSection {
     private List<String> contents;
 
-    public ListSection(List<String> contents) {
+    public ListAbstractSection(List<String> contents) {
         this.contents = contents;
     }
 
@@ -18,7 +18,7 @@ public class ListSection extends Section {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ListSection that = (ListSection) o;
+        ListAbstractSection that = (ListAbstractSection) o;
         return Objects.equals(contents, that.contents);
     }
 
