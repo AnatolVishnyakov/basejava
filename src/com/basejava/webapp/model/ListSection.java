@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends Section {
-    private List<String> _contents;
+    private List<String> contents;
 
     public ListSection(List<String> contents) {
-        this._contents = contents;
+        this.contents = contents;
     }
 
     public List<String> getContents() {
-        return _contents;
+        return contents;
     }
 
     @Override
@@ -19,11 +19,11 @@ public class ListSection extends Section {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ListSection that = (ListSection) o;
-        return Objects.equals(_contents, that._contents);
+        return Objects.equals(contents, that.contents);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(_contents);
+        return Objects.hash(contents);
     }
 }
