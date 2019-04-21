@@ -3,13 +3,13 @@ package com.basejava.webapp.model;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class InstitutionAbstractSection extends AbstractSection {
+public class InstitutionSection extends AbstractSection {
     private String title;
     private LocalDate startDate;
     private LocalDate endDate;
     private String description;
 
-    public InstitutionAbstractSection(String title, LocalDate startDate, LocalDate endDate, String description) {
+    public InstitutionSection(String title, LocalDate startDate, LocalDate endDate, String description) {
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -20,7 +20,7 @@ public class InstitutionAbstractSection extends AbstractSection {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        InstitutionAbstractSection that = (InstitutionAbstractSection) o;
+        InstitutionSection that = (InstitutionSection) o;
         return Objects.equals(title, that.title) &&
                 Objects.equals(startDate, that.startDate) &&
                 Objects.equals(endDate, that.endDate) &&
@@ -34,7 +34,7 @@ public class InstitutionAbstractSection extends AbstractSection {
 
     @Override
     public String toString() {
-        return "InstitutionAbstractSection{" +
+        return "InstitutionSection{" +
                 "title='" + title + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
