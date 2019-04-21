@@ -8,8 +8,8 @@ import java.util.*;
 public class Resume implements Comparable<Resume> {
     private final String uuid;
     private final String fullName;
-    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
     private final Map<ContactType, Contact> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -30,7 +30,15 @@ public class Resume implements Comparable<Resume> {
         return fullName;
     }
 
-    public void addContact(ContactType contactType, String contact) {
+    public Contact getContact(ContactType type) {
+        return contacts.get(type);
+    }
+
+    public AbstractSection getSection(SectionType type) {
+        return sections.get(type);
+    }
+
+    public void setContact(ContactType contactType, String contact) {
         contacts.put(contactType, new Contact(contact));
     }
 
@@ -38,9 +46,6 @@ public class Resume implements Comparable<Resume> {
         sections.put(sectionType, section);
     }
 
-    public Map<ContactType, Contact> getContacts() {
-        return contacts;
-    }
 
     @Override
     public String toString() {
@@ -52,15 +57,15 @@ public class Resume implements Comparable<Resume> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return Objects.equals(uuid, resume.uuid) &&
-                Objects.equals(fullName, resume.fullName) &&
-                Objects.equals(sections, resume.sections) &&
-                Objects.equals(contacts, resume.contacts);
+        return uuid.equals(resume.uuid) &&
+                fullName.equals(resume.fullName) &&
+                Objects.equals(contacts, resume.contacts) &&
+                Objects.equals(sections, resume.sections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, fullName, sections, contacts);
+        return Objects.hash(uuid, fullName, contacts, sections);
     }
 
     @Override

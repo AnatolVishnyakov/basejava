@@ -3,10 +3,11 @@ package com.basejava.webapp.model;
 import java.util.List;
 import java.util.Objects;
 
-public class ListAbstractSection extends AbstractSection {
+public class ListSection extends AbstractSection {
     private List<String> contents;
 
-    public ListAbstractSection(List<String> contents) {
+    public ListSection(List<String> contents) {
+        Objects.requireNonNull(contents, "contents must not be null");
         this.contents = contents;
     }
 
@@ -18,12 +19,17 @@ public class ListAbstractSection extends AbstractSection {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ListAbstractSection that = (ListAbstractSection) o;
+        ListSection that = (ListSection) o;
         return Objects.equals(contents, that.contents);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(contents);
+    }
+
+    @Override
+    public String toString() {
+        return contents.toString();
     }
 }

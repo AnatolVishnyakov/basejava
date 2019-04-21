@@ -1,19 +1,18 @@
 package com.basejava.webapp.model;
 
-import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 public class InstitutionSection extends AbstractSection {
-    private String title;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String description;
+    private final List<Institution> institutions;
 
-    public InstitutionSection(String title, LocalDate startDate, LocalDate endDate, String description) {
-        this.title = title;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.description = description;
+    public InstitutionSection(List<Institution> institutions) {
+        Objects.requireNonNull(institutions, "institutions must not be null");
+        this.institutions = institutions;
+    }
+
+    public List<Institution> getInstitutions() {
+        return institutions;
     }
 
     @Override
@@ -21,24 +20,16 @@ public class InstitutionSection extends AbstractSection {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InstitutionSection that = (InstitutionSection) o;
-        return Objects.equals(title, that.title) &&
-                Objects.equals(startDate, that.startDate) &&
-                Objects.equals(endDate, that.endDate) &&
-                Objects.equals(description, that.description);
+        return institutions.equals(that.institutions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, startDate, endDate, description);
+        return Objects.hash(institutions);
     }
 
     @Override
     public String toString() {
-        return "InstitutionSection{" +
-                "title='" + title + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", description='" + description + '\'' +
-                '}';
+        return institutions.toString();
     }
 }
