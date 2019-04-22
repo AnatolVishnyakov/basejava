@@ -1,17 +1,22 @@
 package com.basejava.webapp.model;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class InstitutionSection extends AbstractSection {
-    private final List<Institution> institutions;
+    private final Map<String, List<Institution>> institutions = new HashMap<>();
 
     public InstitutionSection(List<Institution> institutions) {
         Objects.requireNonNull(institutions, "institutions must not be null");
-        this.institutions = institutions;
+        institutions.forEach(value -> {
+            String title = value.getTitle();
+            List<Institution> institution = this.institutions
+                    .computeIfAbsent(title, k -> new ArrayList<>());
+            institution.add(value);
+            this.institutions.put(title, institution);
+        });
     }
 
-    public List<Institution> getInstitutions() {
+    public Map<String, List<Institution>> getInstitutions() {
         return institutions;
     }
 
