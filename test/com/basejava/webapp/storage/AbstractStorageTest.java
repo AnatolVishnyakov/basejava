@@ -2,10 +2,11 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
-import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -29,6 +30,17 @@ public abstract class AbstractStorageTest {
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
+        RESUME_3.setSection(SectionType.PERSONAL, new TextSection("Test personal"));
+        RESUME_3.setSection(SectionType.OBJECTIVE, new TextSection("Test objective"));
+        RESUME_3.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Test achievement 1", "Test achievement 2")));
+        RESUME_3.setSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("Test qualification 1", "Test qualification 2")));
+        RESUME_3.setSection(SectionType.EXPERIENCE, new InstitutionSection(Arrays.asList(
+                new Institution(new HyperLink("TestPageExperience", "TestURL"), "Test experience", LocalDate.of(2008, 10, 1), LocalDate.of(2013, 10, 1), "University")
+        )));
+        RESUME_3.setSection(SectionType.EDUCATION, new InstitutionSection(Arrays.asList(
+                new Institution(new HyperLink("TestPageEducation", "TestURL"), "Test education", LocalDate.of(2012, 10, 1), LocalDate.of(2013, 10, 12), "Test description")))
+        );
+        RESUME_3.setContact(ContactType.WEBSITE, "www.testsite.com");
     }
 
     @Before
