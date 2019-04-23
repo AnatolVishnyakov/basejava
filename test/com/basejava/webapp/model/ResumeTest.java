@@ -1,11 +1,72 @@
-package com.basejava.webapp;
-
-import com.basejava.webapp.model.*;
+package com.basejava.webapp.model;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 
-public class ResumeTestData {
+public class ResumeTest {
+    public static final String UUID_1 = "uuid1";
+    public static final String UUID_2 = "uuid2";
+    public static final String UUID_3 = "uuid3";
+    public static final String UUID_4 = "uuid4";
+    public static final Resume RESUME_1 = new Resume(UUID_1, "Frank Rearden");
+    public static final Resume RESUME_2 = new Resume(UUID_2, "Petrov Petr Petrovich");
+    public static final Resume RESUME_3 = new Resume(UUID_3, "Ivanov Ivan Ivanovich");
+    public static final Resume RESUME_4 = new Resume(UUID_4, "Sidorov Ivan Ivanovich");
+
+    static {
+        // Init Resume-1
+        RESUME_1.setSection(SectionType.PERSONAL, new TextSection("Test personal 1"));
+        RESUME_1.setSection(SectionType.OBJECTIVE, new TextSection("Test objective 1"));
+        RESUME_1.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Test achievement 1", "Test achievement 2")));
+        RESUME_1.setSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("Test qualification 1", "Test qualification 2")));
+        RESUME_1.setSection(SectionType.EXPERIENCE, new InstitutionSection(Arrays.asList(
+                new Institution(new HyperLink("TestPageExperience 1", "TestURL"), "Test experience 1", LocalDate.of(2008, 10, 1), LocalDate.of(2013, 10, 1), "University")
+        )));
+        RESUME_1.setSection(SectionType.EDUCATION, new InstitutionSection(Arrays.asList(
+                new Institution(new HyperLink("TestPageEducation", "TestURL"), "Test education 1", LocalDate.of(2012, 10, 1), LocalDate.of(2013, 10, 12), "Test description")))
+        );
+        RESUME_1.setContact(ContactType.WEBSITE, "www.testsite.com");
+
+        // Init Resume-2
+        RESUME_2.setSection(SectionType.PERSONAL, new TextSection("Test personal 2"));
+        RESUME_2.setSection(SectionType.OBJECTIVE, new TextSection("Test objective 2"));
+        RESUME_2.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Test achievement 1", "Test achievement 2")));
+        RESUME_2.setSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("Test qualification 1", "Test qualification 2")));
+        RESUME_2.setSection(SectionType.EXPERIENCE, new InstitutionSection(Arrays.asList(
+                new Institution(new HyperLink("TestPageExperience 2", "TestURL"), "Test experience 2", LocalDate.of(2008, 10, 1), LocalDate.of(2013, 10, 1), "University")
+        )));
+        RESUME_2.setSection(SectionType.EDUCATION, new InstitutionSection(Arrays.asList(
+                new Institution(new HyperLink("TestPageEducation", "TestURL"), "Test education 2", LocalDate.of(2012, 10, 1), LocalDate.of(2013, 10, 12), "Test description")))
+        );
+        RESUME_2.setContact(ContactType.WEBSITE, "www.testsite.com");
+
+        // Init Resume-3
+        RESUME_3.setSection(SectionType.PERSONAL, new TextSection("Test personal 3"));
+        RESUME_3.setSection(SectionType.OBJECTIVE, new TextSection("Test objective 3"));
+        RESUME_3.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Test achievement 1", "Test achievement 2")));
+        RESUME_3.setSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("Test qualification 1", "Test qualification 2")));
+        RESUME_3.setSection(SectionType.EXPERIENCE, new InstitutionSection(Arrays.asList(
+                new Institution(new HyperLink("TestPageExperience 3", "TestURL"), "Test experience 3", LocalDate.of(2008, 10, 1), LocalDate.of(2013, 10, 1), "University")
+        )));
+        RESUME_3.setSection(SectionType.EDUCATION, new InstitutionSection(Arrays.asList(
+                new Institution(new HyperLink("TestPageEducation", "TestURL"), "Test education 3", LocalDate.of(2012, 10, 1), LocalDate.of(2013, 10, 12), "Test description")))
+        );
+        RESUME_3.setContact(ContactType.WEBSITE, "www.testsite.com");
+
+        // Init Resume-4
+        RESUME_4.setSection(SectionType.PERSONAL, new TextSection("Test personal 4"));
+        RESUME_4.setSection(SectionType.OBJECTIVE, new TextSection("Test objective 4"));
+        RESUME_4.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Test achievement 1", "Test achievement 2")));
+        RESUME_4.setSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("Test qualification 1", "Test qualification 2")));
+        RESUME_4.setSection(SectionType.EXPERIENCE, new InstitutionSection(Arrays.asList(
+                new Institution(new HyperLink("TestPageExperience 4", "TestURL"), "Test experience 4", LocalDate.of(2008, 10, 1), LocalDate.of(2013, 10, 1), "University")
+        )));
+        RESUME_4.setSection(SectionType.EDUCATION, new InstitutionSection(Arrays.asList(
+                new Institution(new HyperLink("TestPageEducation", "TestURL"), "Test education 4", LocalDate.of(2012, 10, 1), LocalDate.of(2013, 10, 12), "Test description")))
+        );
+        RESUME_4.setContact(ContactType.WEBSITE, "www.testsite.com");
+    }
+
     public static void main(String[] args) {
         Resume resume = new Resume("Ivanov Ivan Ivanovich");
         resume.setContact(ContactType.PHONE, "+7(123) 001-1234");
@@ -55,8 +116,8 @@ public class ResumeTestData {
         resume.setSection(SectionType.EXPERIENCE, new InstitutionSection(Arrays.asList(
                 new Institution(new HyperLink("Заглушка", ""), "Java Online Projects", LocalDate.of(2013, 10, 1), LocalDate.now(), "Автор проекта. Создание, организация и проведение Java онлайн проектов и стажировок."),
                 new Institution(new HyperLink("Заглушка", ""), "Wrike", LocalDate.of(2014, 10, 1), LocalDate.of(2016, 1, 1), "Старший разработчик (backend). Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."),
-                new Institution(new HyperLink("Заглушка", ""), "RIT Center", LocalDate.of(2012, 04, 1), LocalDate.of(2014, 10, 1), "Java архитектор. Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"),
-                new Institution(new HyperLink("Заглушка", ""), "Luxoft (Deutsche Bank)", LocalDate.of(2010, 12, 1), LocalDate.of(2012, 04, 1), "Ведущий программист. Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5."),
+                new Institution(new HyperLink("Заглушка", ""), "RIT Center", LocalDate.of(2012, 4, 1), LocalDate.of(2014, 10, 1), "Java архитектор. Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"),
+                new Institution(new HyperLink("Заглушка", ""), "Luxoft (Deutsche Bank)", LocalDate.of(2010, 12, 1), LocalDate.of(2012, 4, 1), "Ведущий программист. Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5."),
                 new Institution(new HyperLink("Заглушка", ""), "Yota", LocalDate.of(2008, 6, 1), LocalDate.of(2010, 12, 1), "Ведущий специалист\n" +
                         "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" (GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, JMX, JMS, Maven2). Реализация администрирования, статистики и мониторинга фреймворка. Разработка online JMX клиента (Python/ Jython, Django, ExtJS)"),
                 new Institution(new HyperLink("Заглушка", ""), "Enkata", LocalDate.of(2007, 3, 1), LocalDate.of(2008, 3, 1), "Разработчик ПО\n" +

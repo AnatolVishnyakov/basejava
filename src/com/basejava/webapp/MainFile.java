@@ -1,20 +1,21 @@
 package com.basejava.webapp;
 
 import java.io.File;
+import java.util.Objects;
 
 public class MainFile {
     private static final File ROOT_PROJECT_FOLDER = new File("./");
 
     private static void recursiveTraversal(File rootProjectFolder, String separator) {
-        for (File file : rootProjectFolder.listFiles()) {
+        File[] files = Objects.requireNonNull(rootProjectFolder.listFiles());
+        for (File file : files) {
             if (file.isDirectory()) {
-                System.out.println(separator + " <PACKAGE> " + file.getName());
+                System.out.println(separator + " <FOLDER> " + file.getName());
                 recursiveTraversal(new File(file.getAbsolutePath()), separator + "-");
             } else {
                 System.out.println(separator + " <FILE> " + file.getName());
             }
         }
-        return;
     }
 
     public static void main(String[] args) {
