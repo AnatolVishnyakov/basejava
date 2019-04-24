@@ -66,13 +66,13 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        for (File file : directory.listFiles()) {
+        for (File file : Objects.requireNonNull(directory.listFiles())) {
             file.deleteOnExit();
         }
     }
 
     @Override
     public int size() {
-        return directory.listFiles().length;
+        return Objects.requireNonNull(directory.listFiles()).length;
     }
 }

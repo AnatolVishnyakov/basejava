@@ -15,7 +15,8 @@ public enum ContactType {
         this.title = title;
     }
 
-    public String getTitle() {
+    @Override
+    public String toString() {
         return title;
     }
 }

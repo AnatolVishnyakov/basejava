@@ -2,6 +2,8 @@ package com.basejava.webapp.model;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class ResumeTest {
     public static final String UUID_1 = "uuid1";
@@ -65,6 +67,62 @@ public class ResumeTest {
                 new Institution(new HyperLink("TestPageEducation", "TestURL"), "Test education 4", LocalDate.of(2012, 10, 1), LocalDate.of(2013, 10, 12), "Test description")))
         );
         RESUME_4.setContact(ContactType.WEBSITE, "www.testsite.com");
+    }
+
+    private static void printListStringSection(Resume resume, SectionType type) {
+        ListSection section = (ListSection) resume.getSection(type);
+        List<String> contents = section.getContents();
+        contents.forEach(row -> {
+            System.out.print("- ");
+            Arrays.stream(row.split("[.]")).forEach(System.out::println);
+            System.out.println();
+        });
+    }
+
+    private static void printResumeInformation(Resume resume) {
+        System.out.println(resume.getFullName());
+        System.out.println(ContactType.PHONE + ": " + resume.getContact(ContactType.PHONE));
+        System.out.println(ContactType.SKYPE + ": " + resume.getContact(ContactType.SKYPE));
+        System.out.println(ContactType.EMAIL + ": " + resume.getContact(ContactType.EMAIL));
+        System.out.println(ContactType.LINKEDIN + ": " + resume.getContact(ContactType.LINKEDIN));
+        System.out.println(ContactType.GITHUB + ": " + resume.getContact(ContactType.GITHUB));
+        System.out.println(ContactType.STACKOVERFLOW + ": " + resume.getContact(ContactType.STACKOVERFLOW));
+        System.out.println(ContactType.WEBSITE + ": " + resume.getContact(ContactType.WEBSITE));
+        System.out.println();
+
+        System.out.println(SectionType.OBJECTIVE);
+        System.out.println(resume.getSection(SectionType.OBJECTIVE));
+        System.out.println();
+
+        System.out.println(SectionType.PERSONAL);
+        System.out.println(resume.getSection(SectionType.PERSONAL));
+        System.out.println();
+
+        System.out.println(SectionType.ACHIEVEMENT);
+        printListStringSection(resume, SectionType.ACHIEVEMENT);
+
+        System.out.println(SectionType.QUALIFICATIONS);
+        printListStringSection(resume, SectionType.QUALIFICATIONS);
+
+        System.out.println(SectionType.EXPERIENCE);
+        printInstitutionSection(resume, SectionType.EXPERIENCE);
+        System.out.println();
+
+        System.out.println(SectionType.EDUCATION);
+        printInstitutionSection(resume, SectionType.EDUCATION);
+        System.out.println();
+    }
+
+    private static void printInstitutionSection(Resume resume, SectionType type) {
+        InstitutionSection institutionSection = (InstitutionSection) resume.getSection(type);
+        Map<String, List<Institution>> map = institutionSection.getInstitutions();
+        map.keySet().forEach(key -> {
+            System.out.println(key);
+            List<Institution> institutions = map.get(key);
+            institutions.forEach(value -> {
+                System.out.println(String.format("%s - %s %s", value.getStartDate(), value.getEndDate(), value.getDescription()));
+            });
+        });
     }
 
     public static void main(String[] args) {
@@ -138,5 +196,7 @@ public class ResumeTest {
                 new Institution(new HyperLink("Заглушка", ""), "Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)"),
                 new Institution(new HyperLink("Заглушка", ""), "Заочная физико-техническая школа при МФТИ", LocalDate.of(1984, 9, 1), LocalDate.of(1987, 6, 1), "Закончил с отличием")
         )));
+
+        printResumeInformation(resume);
     }
 }
