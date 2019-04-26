@@ -1,4 +1,6 @@
-package com.basejava.webapp.model;
+package com.basejava.webapp;
+
+import com.basejava.webapp.model.*;
 
 import java.time.LocalDate;
 import java.util.Arrays;

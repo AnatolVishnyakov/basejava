@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.basejava.webapp.model.ResumeTest.*;
+import static com.basejava.webapp.ResumeTest.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
