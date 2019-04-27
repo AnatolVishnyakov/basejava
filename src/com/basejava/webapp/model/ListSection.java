@@ -1,10 +1,15 @@
 package com.basejava.webapp.model;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends AbstractSection {
     private List<String> contents;
+
+    public ListSection(String... contents) {
+        this(Arrays.asList(contents));
+    }
 
     public ListSection(List<String> contents) {
         Objects.requireNonNull(contents, "contents must not be null");
