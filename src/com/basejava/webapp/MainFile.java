@@ -52,8 +52,6 @@ public class MainFile {
 
             outputStream.write(bytesToWrite);
             System.out.println("Записано: " + bytesToWrite.length + " байт");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,8 +69,6 @@ public class MainFile {
                 System.out.print(bytesReaded[i] + ", ");
             }
             System.out.println();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,11 +101,28 @@ public class MainFile {
         }
     }
 
+    private static void testSequenceInputStream() {
+        try (FileInputStream inputStreamOne = new FileInputStream("D:\\test_one.txt");
+             FileInputStream inputStreamTwo = new FileInputStream("D:\\test_two.txt");
+             SequenceInputStream sequenceInputStream = new SequenceInputStream(inputStreamOne, inputStreamTwo);
+             FileOutputStream outputStream = new FileOutputStream("D:\\output.txt"))
+        {
+            int readedByte = sequenceInputStream.read();
+            while (readedByte != -1) {
+                outputStream.write(readedByte);
+                readedByte = sequenceInputStream.read();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
 //        walkDirectoryTree(ROOT_PROJECT_FOLDER);
 //        testByteArrayInputStream();
 //        testByteArrayOutputStream();
 //        testFileInputOutputStream();
 //        testPipedInputOutputStream();
+//        testSequenceInputStream();
     }
 }
