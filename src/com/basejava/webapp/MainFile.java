@@ -5,14 +5,16 @@ import java.util.Objects;
 
 public class MainFile {
     private static final File ROOT_PROJECT_FOLDER = new File("./");
+    private static String SEPARATOR = " ";
 
-    private static void walkDirectoryTree(File rootProjectFolder) {
+    private static void walkDirectoryTree(File rootProjectFolder, String separator) {
         File[] files = Objects.requireNonNull(rootProjectFolder.listFiles());
         for (File file : files) {
             if (!file.isDirectory()) {
-                System.out.println(file.getName());
+                System.out.println(String.format("%s <FILE> %s", separator, file.getName()));
             } else {
-                walkDirectoryTree(file);
+                System.out.println("<FOLDER> " + file.getName());
+                walkDirectoryTree(file, SEPARATOR.concat(separator));
             }
         }
     }
@@ -118,7 +120,7 @@ public class MainFile {
     }
 
     public static void main(String[] args) {
-//        walkDirectoryTree(ROOT_PROJECT_FOLDER);
+        walkDirectoryTree(ROOT_PROJECT_FOLDER, SEPARATOR);
 //        testByteArrayInputStream();
 //        testByteArrayOutputStream();
 //        testFileInputOutputStream();
