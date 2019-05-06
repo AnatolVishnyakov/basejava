@@ -2,10 +2,8 @@ package com.basejava.webapp;
 
 import com.basejava.webapp.model.*;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class ResumeTest {
     public static final String UUID_1 = "uuid1";
@@ -19,7 +17,7 @@ public class ResumeTest {
 
     static {
         // Init Resume-1
-        RESUME_1.setSection(SectionType.PERSONAL, new TextSection("Test personal 1"));
+/*        RESUME_1.setSection(SectionType.PERSONAL, new TextSection("Test personal 1"));
         RESUME_1.setSection(SectionType.OBJECTIVE, new TextSection("Test objective 1"));
         RESUME_1.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Test achievement 1", "Test achievement 2")));
         RESUME_1.setSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("Test qualification 1", "Test qualification 2")));
@@ -68,7 +66,7 @@ public class ResumeTest {
         RESUME_4.setSection(SectionType.EDUCATION, new InstitutionSection(Arrays.asList(
                 new Institution(new HyperLink("TestPageEducation", "TestURL"), "Test education 4", LocalDate.of(2012, 10, 1), LocalDate.of(2013, 10, 12), "Test description")))
         );
-        RESUME_4.setContact(ContactType.WEBSITE, "www.testsite.com");
+        RESUME_4.setContact(ContactType.WEBSITE, "www.testsite.com");*/
     }
 
     private static void printListStringSection(Resume resume, SectionType type) {
@@ -117,14 +115,14 @@ public class ResumeTest {
 
     private static void printInstitutionSection(Resume resume, SectionType type) {
         InstitutionSection institutionSection = (InstitutionSection) resume.getSection(type);
-        Map<String, List<Institution>> map = institutionSection.getInstitutions();
-        map.keySet().forEach(key -> {
-            System.out.println(key);
-            List<Institution> institutions = map.get(key);
-            institutions.forEach(value -> {
-                System.out.println(String.format("%s - %s %s", value.getStartDate(), value.getEndDate(), value.getDescription()));
-            });
-        });
+//        Map<String, List<Institution>> map = institutionSection.getInstitutions();
+//        map.keySet().forEach(key -> {
+//            System.out.println(key);
+//            List<Institution> institutions = map.get(key);
+//            institutions.forEach(value -> {
+//                System.out.println(String.format("%s - %s %s", value.getStartDate(), value.getEndDate(), value.getDescription()));
+//            });
+//        });
     }
 
     public static void main(String[] args) {
@@ -173,7 +171,7 @@ public class ResumeTest {
         )));
 
         // Опыт работы
-        resume.setSection(SectionType.EXPERIENCE, new InstitutionSection(Arrays.asList(
+/*        resume.setSection(SectionType.EXPERIENCE, new InstitutionSection(Arrays.asList(
                 new Institution(new HyperLink("Заглушка", ""), "Java Online Projects", LocalDate.of(2013, 10, 1), LocalDate.now(), "Автор проекта. Создание, организация и проведение Java онлайн проектов и стажировок."),
                 new Institution(new HyperLink("Заглушка", ""), "Wrike", LocalDate.of(2014, 10, 1), LocalDate.of(2016, 1, 1), "Старший разработчик (backend). Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."),
                 new Institution(new HyperLink("Заглушка", ""), "RIT Center", LocalDate.of(2012, 4, 1), LocalDate.of(2014, 10, 1), "Java архитектор. Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"),
@@ -197,7 +195,7 @@ public class ResumeTest {
                 new Institution(new HyperLink("Заглушка", ""), "Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1), "Аспирантура (программист С, С++)"),
                 new Institution(new HyperLink("Заглушка", ""), "Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1), "Инженер (программист Fortran, C)"),
                 new Institution(new HyperLink("Заглушка", ""), "Заочная физико-техническая школа при МФТИ", LocalDate.of(1984, 9, 1), LocalDate.of(1987, 6, 1), "Закончил с отличием")
-        )));
+        )));*/
 
         printResumeInformation(resume);
     }

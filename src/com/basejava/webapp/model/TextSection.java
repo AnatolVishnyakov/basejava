@@ -6,6 +6,8 @@ import java.util.Objects;
  * Секции "Позиция" и "Личные качества"
  */
 public class TextSection extends AbstractSection {
+    private static final long serialVersionUID = 1L;
+
     private String content;
 
     public TextSection(String content) {

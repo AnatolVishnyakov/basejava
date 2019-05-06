@@ -6,6 +6,7 @@ import com.basejava.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -15,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 public abstract class AbstractStorageTest {
+    protected static final File PATH_STORAGE_DIRECTORY = new File("D:\\IdeaProjects\\basejava\\storage");
     protected static final Comparator<Resume> RESUME_COMPARATOR = Comparator
             .comparing(Resume::getFullName)
             .thenComparing(Resume::getUuid);
@@ -54,7 +56,7 @@ public abstract class AbstractStorageTest {
         storage.update(expectedResume);
 
         Resume actualResume = storage.get(UUID_1);
-        assertSame(expectedResume, actualResume);
+        assertEquals(expectedResume, actualResume);
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -66,7 +68,7 @@ public abstract class AbstractStorageTest {
     public void save() {
         storage.save(RESUME_4);
         assertEquals(4, storage.size());
-        assertSame(RESUME_4, storage.get(UUID_4));
+        assertEquals(RESUME_4, storage.get(UUID_4));
     }
 
     @Test(expected = ExistStorageException.class)

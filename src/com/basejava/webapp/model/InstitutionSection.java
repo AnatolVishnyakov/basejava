@@ -3,7 +3,9 @@ package com.basejava.webapp.model;
 import java.util.*;
 
 public class InstitutionSection extends AbstractSection {
-    private final Map<String, List<Institution>> institutions = new HashMap<>();
+    private static final long serialVersionUID = 1L;
+
+    private List<Institution> institutions;
 
     public InstitutionSection(Institution... institutions) {
         this(Arrays.asList(institutions));
@@ -11,16 +13,10 @@ public class InstitutionSection extends AbstractSection {
 
     public InstitutionSection(List<Institution> institutions) {
         Objects.requireNonNull(institutions, "institutions must not be null");
-        institutions.forEach(value -> {
-            String title = value.getTitle();
-            List<Institution> institution = this.institutions
-                    .computeIfAbsent(title, k -> new ArrayList<>());
-            institution.add(value);
-            this.institutions.put(title, institution);
-        });
+        this.institutions = institutions;
     }
 
-    public Map<String, List<Institution>> getInstitutions() {
+    public List<Institution> getInstitutions() {
         return institutions;
     }
 
