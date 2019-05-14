@@ -2,21 +2,28 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.strategy.AbstractStrategy;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
-    protected File directory;
+public class FileStorage extends AbstractStorage<File> {
+    private File directory;
+    private AbstractStrategy strategy;
 
-    protected AbstractFileStorage(File directory) {
+    protected FileStorage(File directory, AbstractStrategy strategy) {
         Objects.requireNonNull(directory, "directory must not be null");
+
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(String.format("%s is not directory", directory.getAbsolutePath()));
         }
         if (!directory.canRead() || !directory.canWrite()) {
             throw new IllegalArgumentException(String.format("%s is not readable/writable", directory.getAbsolutePath()));
         }
+        this.strategy = strategy;
         this.directory = directory;
     }
 
@@ -37,14 +44,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         updateElement(file, resume);
     }
 
-    protected abstract void writeResumeToFile(Resume resume, OutputStream outputStream) throws IOException;
-
-    protected abstract Resume readResumeFromFile(InputStream inputStream) throws IOException;
-
     @Override
     protected Resume getElement(File file) {
         try {
-            return readResumeFromFile(new BufferedInputStream(new FileInputStream(file)));
+            return strategy.readResume(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File read error", file.getName(), e);
         }
@@ -53,7 +56,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void updateElement(File file, Resume resume) {
         try {
-            writeResumeToFile(resume, new BufferedOutputStream(new FileOutputStream(file)));
+            strategy.writeResume(resume, new BufferedOutputStream(new FileOutputStream(file)));//writeResumeToFile(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
             throw new StorageException("IO error", file.getName(), e);
         }
@@ -67,6 +70,26 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected File getSearchKey(String uuid) {
         return new File(directory, uuid);
+    }
+
+    @Override
+    protected List<Resume> convertToListStorage() {
+        File[] files = directory.listFiles();
+        Objects.requireNonNull(files, String.format("Files is not found to directory %s", directory.getAbsolutePath()));
+        if (files.length > 0) {
+            List<Resume> resumes = new ArrayList<>();
+            for (File file : files) {
+                try {
+                    Resume resume = strategy.readResume(new FileInputStream(file));
+                    resumes.add(resume);
+                } catch (IOException e) {
+                    throw new StorageException("Error read resume", null, e);
+                }
+            }
+            return resumes;
+        }
+        return Collections.emptyList();
+
     }
 
     @Override
