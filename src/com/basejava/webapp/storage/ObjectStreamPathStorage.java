@@ -4,14 +4,15 @@ import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class ObjectStreamStorage extends AbstractFileStorage {
-    protected ObjectStreamStorage(File directory) {
-        super(directory);
+public class ObjectStreamPathStorage extends AbstractPathStorage {
+    protected ObjectStreamPathStorage(Path pathDirectory) {
+        super(pathDirectory.toFile().getAbsolutePath());
     }
 
     @Override
@@ -32,8 +33,8 @@ public class ObjectStreamStorage extends AbstractFileStorage {
 
     @Override
     protected List<Resume> convertToListStorage() {
-        File[] files = directory.listFiles();
-        Objects.requireNonNull(files, String.format("Files is not found to directory %s", directory.getAbsolutePath()));
+        File[] files = directory.toFile().listFiles();
+        Objects.requireNonNull(files, String.format("Files is not found to directory %s", directory.toFile().getAbsolutePath()));
         if(files.length > 0) {
             List<Resume> resumes = new ArrayList<>();
             for (File file: files) {
@@ -47,5 +48,6 @@ public class ObjectStreamStorage extends AbstractFileStorage {
             return resumes;
         }
         return Collections.emptyList();
+
     }
 }

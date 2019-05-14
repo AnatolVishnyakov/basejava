@@ -13,7 +13,6 @@ import java.util.List;
 
 import static com.basejava.webapp.ResumeTest.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 public abstract class AbstractStorageTest {
     protected static final File PATH_STORAGE_DIRECTORY = new File("D:\\IdeaProjects\\basejava\\storage");
