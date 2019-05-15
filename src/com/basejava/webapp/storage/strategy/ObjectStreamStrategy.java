@@ -5,7 +5,7 @@ import com.basejava.webapp.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamStrategy extends AbstractStrategy {
+public class ObjectStreamStrategy implements AbstractStrategy {
     @Override
     public void writeResume(Resume resume, OutputStream outputStream) throws IOException {
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
