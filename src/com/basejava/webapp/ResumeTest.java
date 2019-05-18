@@ -2,6 +2,7 @@ package com.basejava.webapp;
 
 import com.basejava.webapp.model.*;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,18 +18,34 @@ public class ResumeTest {
 
     static {
         // Init Resume-1
-/*        RESUME_1.setSection(SectionType.PERSONAL, new TextSection("Test personal 1"));
+        RESUME_1.setSection(SectionType.PERSONAL, new TextSection("Test personal 1"));
         RESUME_1.setSection(SectionType.OBJECTIVE, new TextSection("Test objective 1"));
         RESUME_1.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Test achievement 1", "Test achievement 2")));
         RESUME_1.setSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("Test qualification 1", "Test qualification 2")));
         RESUME_1.setSection(SectionType.EXPERIENCE, new InstitutionSection(Arrays.asList(
-                new Institution(new HyperLink("TestPageExperience 1", "TestURL"), "Test experience 1", LocalDate.of(2008, 10, 1), LocalDate.of(2013, 10, 1), "University")
+                new Institution(
+                        new HyperLink("TestPageExperience 1", "TestURL"),
+                        new Institution.Position(
+                                "Test experience 1",
+                                LocalDate.of(2008, 10, 1),
+                                LocalDate.of(2013, 10, 1),
+                                "University"
+                        )
+                )
         )));
         RESUME_1.setSection(SectionType.EDUCATION, new InstitutionSection(Arrays.asList(
-                new Institution(new HyperLink("TestPageEducation", "TestURL"), "Test education 1", LocalDate.of(2012, 10, 1), LocalDate.of(2013, 10, 12), "Test description")))
-        );
+                new Institution(
+                        new HyperLink("TestPageEducation", "TestURL"),
+                        new Institution.Position(
+                                "Test education 1",
+                                LocalDate.of(2012, 10, 1),
+                                LocalDate.of(2013, 10, 12),
+                                "Test description"
+                        )
+                )
+        )));
         RESUME_1.setContact(ContactType.WEBSITE, "www.testsite.com");
-
+/*
         // Init Resume-2
         RESUME_2.setSection(SectionType.PERSONAL, new TextSection("Test personal 2"));
         RESUME_2.setSection(SectionType.OBJECTIVE, new TextSection("Test objective 2"));

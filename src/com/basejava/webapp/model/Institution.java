@@ -1,5 +1,10 @@
 package com.basejava.webapp.model;
 
+import com.basejava.webapp.utils.LocalDateAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
@@ -10,11 +15,15 @@ import java.util.Objects;
 import static com.basejava.webapp.utils.DateUtils.NOW;
 import static com.basejava.webapp.utils.DateUtils.of;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Institution implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final HyperLink homePage;
+    private HyperLink homePage;
     private List<Position> positions;
+
+    public Institution() {
+    }
 
     public Institution(HyperLink homePage, Position... positions) {
         this(homePage, Arrays.asList(positions));
@@ -55,11 +64,17 @@ public class Institution implements Serializable {
                 '}';
     }
 
-    static class Position implements Serializable {
-        private final String title;
-        private final LocalDate startDate;
-        private final LocalDate endDate;
-        private final String description;
+    @XmlAccessorType(XmlAccessType.FIELD)
+    public static class Position implements Serializable {
+        private String title;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate startDate;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate endDate;
+        private String description;
+
+        public Position() {
+        }
 
         public Position(int startYear, Month startMonth, String title, String description) {
             this(title, of(startYear, startMonth), NOW, description);

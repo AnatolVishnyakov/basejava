@@ -2,7 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.storage.strategy.AbstractStrategy;
+import com.basejava.webapp.storage.serializer.AbstractStrategy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected void updateElement(File file, Resume resume) {
         try {
-            strategy.writeResume(resume, new BufferedOutputStream(new FileOutputStream(file)));//writeResumeToFile(resume, new BufferedOutputStream(new FileOutputStream(file)));
+            strategy.writeResume(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
             throw new StorageException("IO error", file.getName(), e);
         }
