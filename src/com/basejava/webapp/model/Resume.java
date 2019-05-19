@@ -57,13 +57,6 @@ public class Resume implements Comparable<Resume>, Serializable {
         sections.put(sectionType, section);
     }
 
-
-//    @Override
-//    public String toString() {
-//        return String.format("UUID: %s FULL_NAME: %s", uuid, fullName);
-//    }
-
-
     @Override
     public String toString() {
         return "Resume{" +
