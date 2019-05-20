@@ -12,7 +12,6 @@ public class XmlStreamStrategy implements AbstractStrategy {
     public XmlStreamStrategy() {
         this.xmlParser = new XmlParser(
                 Resume.class,
-                Contact.class,
                 Institution.class,
                 HyperLink.class,
                 InstitutionSection.class,
