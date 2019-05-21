@@ -1,6 +1,5 @@
 package com.basejava.webapp.storage.serializer;
 
-import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.*;
 
 import java.io.*;
@@ -27,12 +26,19 @@ public class DataStreamStrategy implements AbstractStrategy {
             dataOutputStream.writeInt(sections.size());
             for (Map.Entry<SectionType, AbstractSection> section : sections.entrySet()) {
                 dataOutputStream.writeUTF(section.getKey().name());
-                if (SectionType.isTextSection(section.getKey())) {
-                    writeTextSection(dataOutputStream, (TextSection) section.getValue());
-                } else if (SectionType.isListSection(section.getKey())) {
-                    writeListSection(dataOutputStream, (ListSection) section.getValue());
-                } else if (SectionType.isInstitutionSection(section.getKey())) {
-                    writeInstitutionSection(dataOutputStream, (InstitutionSection) section.getValue());
+                switch (section.getKey()) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        writeTextSection(dataOutputStream, (TextSection) section.getValue());
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        writeListSection(dataOutputStream, (ListSection) section.getValue());
+                        break;
+                    case EXPERIENCE:
+                    case EDUCATION:
+                        writeInstitutionSection(dataOutputStream, (InstitutionSection) section.getValue());
+                        break;
                 }
             }
         }
@@ -53,28 +59,24 @@ public class DataStreamStrategy implements AbstractStrategy {
     private void writeInstitutionSection(DataOutputStream dataOutputStream, InstitutionSection section) throws IOException {
         List<Institution> institutions = section.getInstitutions();
         dataOutputStream.writeInt(institutions.size());
-        institutions.forEach(institution -> {
-            try {
-                dataOutputStream.writeUTF(institution.getHomePage().getName());
-                dataOutputStream.writeUTF(institution.getHomePage().getUrl());
 
-                List<Institution.Position> positions = institution.getPositions();
-                dataOutputStream.writeInt(positions.size());
+        for (Institution institution : institutions) {
+            dataOutputStream.writeUTF(institution.getHomePage().getName());
+            dataOutputStream.writeUTF(institution.getHomePage().getUrl());
+            writePositions(dataOutputStream, institution);
+        }
+    }
 
-                positions.forEach(position -> {
-                    try {
-                        dataOutputStream.writeUTF(position.getTitle());
-                        writeLocalDate(dataOutputStream, position.getStartDate());
-                        writeLocalDate(dataOutputStream, position.getEndDate());
-                        dataOutputStream.writeUTF(position.getDescription());
-                    } catch (IOException e) {
-                        throw new StorageException("[POSITION] Error write resume", null, e);
-                    }
-                });
-            } catch (IOException e) {
-                throw new StorageException("[INSTITUTION] Error write resume", null, e);
-            }
-        });
+    private void writePositions(DataOutputStream dataOutputStream, Institution institution) throws IOException {
+        List<Institution.Position> positions = institution.getPositions();
+        dataOutputStream.writeInt(positions.size());
+
+        for (Institution.Position position : positions) {
+            dataOutputStream.writeUTF(position.getTitle());
+            writeLocalDate(dataOutputStream, position.getStartDate());
+            writeLocalDate(dataOutputStream, position.getEndDate());
+            dataOutputStream.writeUTF(position.getDescription());
+        }
     }
 
     private void writeLocalDate(DataOutputStream dataOutputStream, LocalDate localDate) throws IOException {
@@ -98,12 +100,19 @@ public class DataStreamStrategy implements AbstractStrategy {
             int sizeSection = dataInputStream.readInt();
             for (int i = 0; i < sizeSection; i++) {
                 SectionType sectionType = SectionType.valueOf(dataInputStream.readUTF());
-                if (SectionType.isTextSection(sectionType)) {
-                    resume.setSection(sectionType, new TextSection(dataInputStream.readUTF()));
-                } else if (SectionType.isListSection(sectionType)) {
-                    resume.setSection(sectionType, new ListSection(readListSection(dataInputStream)));
-                } else if (SectionType.isInstitutionSection(sectionType)) {
-                    resume.setSection(sectionType, new InstitutionSection(readInstitutionSection(dataInputStream)));
+                switch (sectionType) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        resume.setSection(sectionType, new TextSection(dataInputStream.readUTF()));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        resume.setSection(sectionType, new ListSection(readListSection(dataInputStream)));
+                        break;
+                    case EXPERIENCE:
+                    case EDUCATION:
+                        resume.setSection(sectionType, new InstitutionSection(readInstitutionSection(dataInputStream)));
+                        break;
                 }
             }
             return resume;
