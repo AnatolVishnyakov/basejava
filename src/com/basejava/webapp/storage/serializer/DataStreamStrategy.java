@@ -8,11 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@FunctionalInterface
-interface DataStreamWriter<T> {
-    void write(T t) throws IOException;
-}
-
 public class DataStreamStrategy implements AbstractStrategy {
     @Override
     public void writeResume(Resume resume, OutputStream outputStream) throws IOException {
@@ -64,6 +59,11 @@ public class DataStreamStrategy implements AbstractStrategy {
         }
     }
 
+    @FunctionalInterface
+    private interface DataStreamWriter<T> {
+        void write(T t) throws IOException;
+    }
+
     private void writeLocalDate(DataOutputStream dataOutputStream, LocalDate localDate) throws IOException {
         dataOutputStream.writeInt(localDate.getYear());
         dataOutputStream.writeInt(localDate.getMonthValue());
@@ -92,29 +92,21 @@ public class DataStreamStrategy implements AbstractStrategy {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        resume.setSection(sectionType, new ListSection(readListSection(dataInputStream)));
+                        resume.setSection(sectionType, new ListSection(readListSection(dataInputStream, dataInputStream::readUTF)));
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        resume.setSection(sectionType, new InstitutionSection(readInstitutionSection(dataInputStream)));
+                        resume.setSection(sectionType, new InstitutionSection(readListSection(dataInputStream, () ->
+                                new Institution(
+                                        new HyperLink(dataInputStream.readUTF(), dataInputStream.readUTF()),
+                                        readPosition(dataInputStream)
+                                )
+                        )));
                         break;
                 }
             }
             return resume;
         }
-    }
-
-    private List<Institution> readInstitutionSection(DataInputStream dataInputStream) throws IOException {
-        int size = dataInputStream.readInt();
-        List<Institution> list = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            Institution institution = new Institution(
-                    new HyperLink(dataInputStream.readUTF(), dataInputStream.readUTF()),
-                    readPosition(dataInputStream)
-            );
-            list.add(institution);
-        }
-        return list;
     }
 
     private List<Institution.Position> readPosition(DataInputStream dataInputStream) throws IOException {
@@ -136,12 +128,17 @@ public class DataStreamStrategy implements AbstractStrategy {
         return LocalDate.of(dataInputStream.readInt(), dataInputStream.readInt(), dataInputStream.readInt());
     }
 
-    private List<String> readListSection(DataInputStream dataInputStream) throws IOException {
+    private <T> List<T> readListSection(DataInputStream dataInputStream, DataStreamReader<T> reader) throws IOException {
         int size = dataInputStream.readInt();
-        List<String> list = new ArrayList<>();
+        List<T> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            list.add(dataInputStream.readUTF());
+            list.add(reader.read());
         }
         return list;
+    }
+
+    @FunctionalInterface
+    private interface DataStreamReader<T> {
+        T read() throws IOException;
     }
 }
