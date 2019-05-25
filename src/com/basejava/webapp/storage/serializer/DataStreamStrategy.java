@@ -76,14 +76,10 @@ public class DataStreamStrategy implements AbstractStrategy {
             String uuid = dataInputStream.readUTF();
             String fullName = dataInputStream.readUTF();
             Resume resume = new Resume(uuid, fullName);
-
-            int sizeContact = dataInputStream.readInt();
-            for (int i = 0; i < sizeContact; i++) {
-                resume.setContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
-            }
-
-            int sizeSection = dataInputStream.readInt();
-            for (int i = 0; i < sizeSection; i++) {
+            // read Contact
+            readContent(dataInputStream, () -> resume.setContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF()));
+            // read Section
+            readContent(dataInputStream, () -> {
                 SectionType sectionType = SectionType.valueOf(dataInputStream.readUTF());
                 switch (sectionType) {
                     case PERSONAL:
@@ -92,11 +88,11 @@ public class DataStreamStrategy implements AbstractStrategy {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        resume.setSection(sectionType, new ListSection(readListSection(dataInputStream, dataInputStream::readUTF)));
+                        resume.setSection(sectionType, new ListSection(readSection(dataInputStream, dataInputStream::readUTF)));
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        resume.setSection(sectionType, new InstitutionSection(readListSection(dataInputStream, () ->
+                        resume.setSection(sectionType, new InstitutionSection(readSection(dataInputStream, () ->
                                 new Institution(
                                         new HyperLink(dataInputStream.readUTF(), dataInputStream.readUTF()),
                                         readPosition(dataInputStream)
@@ -104,8 +100,15 @@ public class DataStreamStrategy implements AbstractStrategy {
                         )));
                         break;
                 }
-            }
+            });
             return resume;
+        }
+    }
+
+    private <T> void readContent(DataInputStream dataInputStream, SectionHandler<T> section) throws IOException {
+        int size = dataInputStream.readInt();
+        for (int i = 0; i < size; i++) {
+            section.handle();
         }
     }
 
@@ -128,7 +131,7 @@ public class DataStreamStrategy implements AbstractStrategy {
         return LocalDate.of(dataInputStream.readInt(), dataInputStream.readInt(), dataInputStream.readInt());
     }
 
-    private <T> List<T> readListSection(DataInputStream dataInputStream, DataStreamReader<T> reader) throws IOException {
+    private <T> List<T> readSection(DataInputStream dataInputStream, DataStreamReader<T> reader) throws IOException {
         int size = dataInputStream.readInt();
         List<T> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
@@ -140,5 +143,10 @@ public class DataStreamStrategy implements AbstractStrategy {
     @FunctionalInterface
     private interface DataStreamReader<T> {
         T read() throws IOException;
+    }
+
+    @FunctionalInterface
+    private interface SectionHandler<T> {
+        void handle() throws IOException;
     }
 }
