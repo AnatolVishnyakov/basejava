@@ -114,6 +114,8 @@ public class DataStreamStrategy implements AbstractStrategy {
                         )
                 )));
                 break;
+            default:
+                throw new IllegalStateException(String.format("Не корректная секция: %s", sectionType));
         }
     }
 
