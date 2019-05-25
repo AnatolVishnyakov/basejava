@@ -15,12 +15,12 @@ public class DataStreamStrategy implements AbstractStrategy {
             dataOutputStream.writeUTF(resume.getUuid());
             dataOutputStream.writeUTF(resume.getFullName());
 
-            writeDataContainer(dataOutputStream, resume.getContacts().entrySet(), contact -> {
+            writeContent(dataOutputStream, resume.getContacts().entrySet(), contact -> {
                 dataOutputStream.writeUTF(contact.getKey().name());
                 dataOutputStream.writeUTF(contact.getValue());
             });
 
-            writeDataContainer(dataOutputStream, resume.getSections().entrySet(), entity -> {
+            writeContent(dataOutputStream, resume.getSections().entrySet(), entity -> {
                         SectionType sectionType = entity.getKey();
                         AbstractSection section = entity.getValue();
                         dataOutputStream.writeUTF(sectionType.name());
@@ -31,14 +31,14 @@ public class DataStreamStrategy implements AbstractStrategy {
                                 break;
                             case ACHIEVEMENT:
                             case QUALIFICATIONS:
-                                writeDataContainer(dataOutputStream, ((ListSection) section).getContents(), dataOutputStream::writeUTF);
+                                writeContent(dataOutputStream, ((ListSection) section).getContents(), dataOutputStream::writeUTF);
                                 break;
                             case EXPERIENCE:
                             case EDUCATION:
-                                writeDataContainer(dataOutputStream, ((InstitutionSection) section).getInstitutions(), institution -> {
+                                writeContent(dataOutputStream, ((InstitutionSection) section).getInstitutions(), institution -> {
                                     dataOutputStream.writeUTF(institution.getHomePage().getName());
                                     dataOutputStream.writeUTF(institution.getHomePage().getUrl());
-                                    writeDataContainer(dataOutputStream, institution.getPositions(), position -> {
+                                    writeContent(dataOutputStream, institution.getPositions(), position -> {
                                         dataOutputStream.writeUTF(position.getTitle());
                                         writeLocalDate(dataOutputStream, position.getStartDate());
                                         writeLocalDate(dataOutputStream, position.getEndDate());
@@ -52,22 +52,23 @@ public class DataStreamStrategy implements AbstractStrategy {
         }
     }
 
-    private <T> void writeDataContainer(DataOutputStream dataOutputStream, Collection<T> collection, DataStreamWriter<T> writer) throws IOException {
+    private <T> void writeContent(DataOutputStream dataOutputStream, Collection<T> collection, DataStreamWriter<T> writer) throws IOException {
         dataOutputStream.writeInt(collection.size());
         for (T element : collection) {
             writer.write(element);
         }
     }
 
-    @FunctionalInterface
-    private interface DataStreamWriter<T> {
-        void write(T t) throws IOException;
-    }
-
     private void writeLocalDate(DataOutputStream dataOutputStream, LocalDate localDate) throws IOException {
         dataOutputStream.writeInt(localDate.getYear());
         dataOutputStream.writeInt(localDate.getMonthValue());
         dataOutputStream.writeInt(localDate.getDayOfMonth());
+    }
+
+    @FunctionalInterface
+    private interface DataStreamWriter<T> {
+        void write(T t) throws IOException;
+
     }
 
     @Override
@@ -79,28 +80,7 @@ public class DataStreamStrategy implements AbstractStrategy {
             // read Contact
             readContent(dataInputStream, () -> resume.setContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF()));
             // read Section
-            readContent(dataInputStream, () -> {
-                SectionType sectionType = SectionType.valueOf(dataInputStream.readUTF());
-                switch (sectionType) {
-                    case PERSONAL:
-                    case OBJECTIVE:
-                        resume.setSection(sectionType, new TextSection(dataInputStream.readUTF()));
-                        break;
-                    case ACHIEVEMENT:
-                    case QUALIFICATIONS:
-                        resume.setSection(sectionType, new ListSection(readSection(dataInputStream, dataInputStream::readUTF)));
-                        break;
-                    case EXPERIENCE:
-                    case EDUCATION:
-                        resume.setSection(sectionType, new InstitutionSection(readSection(dataInputStream, () ->
-                                new Institution(
-                                        new HyperLink(dataInputStream.readUTF(), dataInputStream.readUTF()),
-                                        readPosition(dataInputStream)
-                                )
-                        )));
-                        break;
-                }
-            });
+            readContent(dataInputStream, () -> readSection(dataInputStream, resume));
             return resume;
         }
     }
@@ -112,26 +92,36 @@ public class DataStreamStrategy implements AbstractStrategy {
         }
     }
 
-    private List<Institution.Position> readPosition(DataInputStream dataInputStream) throws IOException {
-        int size = dataInputStream.readInt();
-        List<Institution.Position> list = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            Institution.Position position = new Institution.Position(
-                    dataInputStream.readUTF(),
-                    readLocalDate(dataInputStream),
-                    readLocalDate(dataInputStream),
-                    dataInputStream.readUTF()
-            );
-            list.add(position);
+    private void readSection(DataInputStream dataInputStream, Resume resume) throws IOException {
+        SectionType sectionType = SectionType.valueOf(dataInputStream.readUTF());
+        switch (sectionType) {
+            case PERSONAL:
+            case OBJECTIVE:
+                resume.setSection(sectionType, new TextSection(dataInputStream.readUTF()));
+                break;
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                resume.setSection(sectionType, new ListSection(readElementList(dataInputStream, dataInputStream::readUTF)));
+                break;
+            case EXPERIENCE:
+            case EDUCATION:
+                resume.setSection(sectionType, new InstitutionSection(readElementList(dataInputStream, () ->
+                        new Institution(
+                                new HyperLink(dataInputStream.readUTF(), dataInputStream.readUTF()),
+                                readElementList(dataInputStream, () -> new Institution.Position(
+                                        dataInputStream.readUTF(), readLocalDate(dataInputStream), readLocalDate(dataInputStream), dataInputStream.readUTF())
+                                )
+                        )
+                )));
+                break;
         }
-        return list;
     }
 
     private LocalDate readLocalDate(DataInputStream dataInputStream) throws IOException {
         return LocalDate.of(dataInputStream.readInt(), dataInputStream.readInt(), dataInputStream.readInt());
     }
 
-    private <T> List<T> readSection(DataInputStream dataInputStream, DataStreamReader<T> reader) throws IOException {
+    private <T> List<T> readElementList(DataInputStream dataInputStream, DataStreamReader<T> reader) throws IOException {
         int size = dataInputStream.readInt();
         List<T> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
