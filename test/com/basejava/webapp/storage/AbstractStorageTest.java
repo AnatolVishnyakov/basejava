@@ -1,5 +1,6 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.Config;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
@@ -15,7 +16,7 @@ import static com.basejava.webapp.ResumeTest.*;
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
-    protected static final File PATH_STORAGE_DIRECTORY = new File("D:\\IdeaProjects\\basejava\\storage");
+    protected static final File PATH_STORAGE_DIRECTORY = Config.getInstance().getStorageDirectory();
     protected static final Comparator<Resume> RESUME_COMPARATOR = Comparator
             .comparing(Resume::getFullName)
             .thenComparing(Resume::getUuid);
