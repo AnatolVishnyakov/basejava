@@ -18,6 +18,7 @@ public class ResumeTest {
 
     static {
         // Init Resume-1
+/*
         RESUME_1.setSection(SectionType.PERSONAL, new TextSection("Test personal 1"));
         RESUME_1.setSection(SectionType.OBJECTIVE, new TextSection("Test objective 1"));
         RESUME_1.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Test achievement 1", "Test achievement 2")));
@@ -45,6 +46,7 @@ public class ResumeTest {
                 )
         )));
         RESUME_1.setContact(ContactType.WEBSITE, "www.testsite.com");
+*/
 /*
         // Init Resume-2
         RESUME_2.setSection(SectionType.PERSONAL, new TextSection("Test personal 2"));
