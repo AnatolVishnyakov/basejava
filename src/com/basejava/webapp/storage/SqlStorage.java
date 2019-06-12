@@ -4,26 +4,29 @@ import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.sql.ConnectionFactory;
+import com.basejava.webapp.utils.SqlHelper;
+import com.basejava.webapp.utils.SqlHelper.Operation;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.basejava.webapp.utils.SqlHelper.Operation.DELETE;
+
 public class SqlStorage implements Storage {
     private static final String DUPLICATE_CODE = "23505";
-    private static final int FAILURE_UPDATE = 0;
-    private final ConnectionFactory connectionFactory;
+    private final SqlHelper helper;
 
     public SqlStorage(String databaseUrl, String databaseUser, String databasePassword) {
-        this.connectionFactory = () -> DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
+        this.helper = SqlHelper.getInstance(databaseUrl, databaseUser, databasePassword);
     }
 
     @Override
     public void clear() {
         String query = "DELETE FROM resume";
         try {
-            executeQuery(query, null, Operation.DELETE);
+            helper.executeQuery(query, null, DELETE);
         } catch (SQLException e) {
             throw new StorageException(e);
         }
@@ -33,7 +36,7 @@ public class SqlStorage implements Storage {
     public void update(Resume resume) {
         String query = "UPDATE resume SET full_name = ? WHERE uuid = ?";
         try {
-            executeQuery(query, new String[]{resume.getFullName(), resume.getUuid()}, Operation.UPDATE);
+            helper.executeQuery(query, new String[]{resume.getFullName(), resume.getUuid()}, Operation.UPDATE);
         } catch (SQLException e) {
             throw new StorageException(e);
         } catch (NotExistStorageException e) {
@@ -45,7 +48,7 @@ public class SqlStorage implements Storage {
     public void save(Resume resume) {
         String query = "INSERT INTO resume(uuid, full_name) VALUES (?, ?)";
         try {
-            executeQuery(query, new String[]{resume.getUuid(), resume.getFullName()}, Operation.INSERT);
+            helper.executeQuery(query, new String[]{resume.getUuid(), resume.getFullName()}, Operation.INSERT);
         } catch (SQLException e) {
             if (e.getSQLState().equals(DUPLICATE_CODE)) {
                 throw new ExistStorageException(resume.getUuid());
@@ -58,7 +61,7 @@ public class SqlStorage implements Storage {
     public Resume get(String uuid) {
         String query = "SELECT * FROM resume WHERE uuid = ?";
         try {
-            ResultSet result = executeQuery(query, new String[]{uuid}, Operation.SELECT);
+            ResultSet result = helper.executeQuery(query, new String[]{uuid}, Operation.SELECT);
             if (!result.next()) {
                 throw new NotExistStorageException(uuid);
             }
@@ -73,7 +76,7 @@ public class SqlStorage implements Storage {
     public void delete(String uuid) {
         String query = "DELETE FROM resume WHERE uuid = ?";
         try {
-            executeQuery(query, new String[]{uuid}, Operation.DELETE);
+            helper.executeQuery(query, new String[]{uuid}, DELETE);
         } catch (SQLException e) {
             throw new StorageException(e);
         }
@@ -83,7 +86,7 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         String query = "SELECT * FROM resume ORDER BY full_name";
         try {
-            ResultSet result = executeQuery(query, null, Operation.SELECT);
+            ResultSet result = helper.executeQuery(query, null, Operation.SELECT);
             List<Resume> resumes = new ArrayList<>();
             while (result.next()) {
                 String uuid = result.getString("uuid").trim();
@@ -103,7 +106,7 @@ public class SqlStorage implements Storage {
         final int COUNT_COLUMN = 1;
 
         try {
-            ResultSet result = executeQuery(query, null, Operation.SELECT);
+            ResultSet result = helper.executeQuery(query, null, Operation.SELECT);
             if (!result.next()) {
                 throw new SQLException("Error query size table");
             }
@@ -111,28 +114,5 @@ public class SqlStorage implements Storage {
         } catch (SQLException e) {
             throw new StorageException(e);
         }
-    }
-
-    private ResultSet executeQuery(String query, String[] columns, Operation operation) throws SQLException {
-        try (Connection connection = connectionFactory.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            if (columns != null) {
-                for (int i = 0; i < columns.length; i++) {
-                    statement.setString(i + 1, columns[i]);
-                }
-            }
-            if (operation == Operation.UPDATE) {
-                if (statement.executeUpdate() == FAILURE_UPDATE) {
-                    throw new NotExistStorageException(null);
-                }
-            } else {
-                statement.execute();
-            }
-            return statement.getResultSet();
-        }
-    }
-
-    private enum Operation {
-        SELECT, DELETE, INSERT, UPDATE
     }
 }
