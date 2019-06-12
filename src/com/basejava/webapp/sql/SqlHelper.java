@@ -1,7 +1,6 @@
-package com.basejava.webapp.utils;
+package com.basejava.webapp.sql;
 
 import com.basejava.webapp.exception.NotExistStorageException;
-import com.basejava.webapp.sql.ConnectionFactory;
 
 import java.sql.*;
 

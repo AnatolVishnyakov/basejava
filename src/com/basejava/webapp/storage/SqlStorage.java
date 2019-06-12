@@ -4,15 +4,15 @@ import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.utils.SqlHelper;
-import com.basejava.webapp.utils.SqlHelper.Operation;
+import com.basejava.webapp.sql.SqlHelper;
+import com.basejava.webapp.sql.SqlHelper.Operation;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.basejava.webapp.utils.SqlHelper.Operation.DELETE;
+import static com.basejava.webapp.sql.SqlHelper.Operation.DELETE;
 
 public class SqlStorage implements Storage {
     private static final String DUPLICATE_CODE = "23505";
