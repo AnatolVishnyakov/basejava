@@ -1,6 +1,7 @@
 package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.NotExistStorageException;
+import com.basejava.webapp.model.ContactType;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.sql.SqlHelper;
 
@@ -37,6 +38,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
+        // language=PostgreSQL
         String query = "INSERT INTO resume(uuid, full_name) VALUES (?, ?)";
         helper.executeQuery(query, statement -> {
             statement.setString(1, resume.getUuid());
@@ -48,14 +50,27 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        String query = "SELECT * FROM resume WHERE uuid = ?";
+        // language=PostgreSQL
+        String query =
+                "SELECT * FROM resume r " +
+                        "   JOIN contact cnt " +
+                        "       ON cnt.resume_uuid = r.uuid " +
+                        "WHERE r.uuid = ?";
+
         return helper.executeQuery(query, statement -> {
             statement.setString(1, uuid);
             ResultSet result = statement.executeQuery();
             if (!result.next()) {
                 throw new NotExistStorageException(uuid);
             }
-            return new Resume(uuid, result.getString("full_name"));
+
+            Resume resume = new Resume(uuid, result.getString("full_name"));
+            do {
+                String value = result.getString("value");
+                ContactType type = ContactType.valueOf(result.getString("type"));
+                resume.setContact(type, value);
+            } while (result.next());
+            return resume;
         });
     }
 

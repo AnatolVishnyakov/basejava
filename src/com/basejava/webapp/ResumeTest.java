@@ -5,12 +5,13 @@ import com.basejava.webapp.model.*;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class ResumeTest {
-    public static final String UUID_1 = "uuid1";
-    public static final String UUID_2 = "uuid2";
-    public static final String UUID_3 = "uuid3";
-    public static final String UUID_4 = "uuid4";
+    public static final String UUID_1 = UUID.randomUUID().toString();
+    public static final String UUID_2 = UUID.randomUUID().toString();
+    public static final String UUID_3 = UUID.randomUUID().toString();
+    public static final String UUID_4 = UUID.randomUUID().toString();
     public static final Resume RESUME_1 = new Resume(UUID_1, "Frank Rearden");
     public static final Resume RESUME_2 = new Resume(UUID_2, "Petrov Petr Petrovich");
     public static final Resume RESUME_3 = new Resume(UUID_3, "Ivanov Ivan Ivanovich");
@@ -18,7 +19,6 @@ public class ResumeTest {
 
     static {
         // Init Resume-1
-/*
         RESUME_1.setSection(SectionType.PERSONAL, new TextSection("Test personal 1"));
         RESUME_1.setSection(SectionType.OBJECTIVE, new TextSection("Test objective 1"));
         RESUME_1.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Test achievement 1", "Test achievement 2")));
@@ -46,7 +46,6 @@ public class ResumeTest {
                 )
         )));
         RESUME_1.setContact(ContactType.WEBSITE, "www.testsite.com");
-*/
 /*
         // Init Resume-2
         RESUME_2.setSection(SectionType.PERSONAL, new TextSection("Test personal 2"));
