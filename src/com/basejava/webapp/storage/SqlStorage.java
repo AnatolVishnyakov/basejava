@@ -53,9 +53,9 @@ public class SqlStorage implements Storage {
         // language=PostgreSQL
         String query =
                 "SELECT * FROM resume r " +
-                        "   JOIN contact cnt " +
-                        "       ON cnt.resume_uuid = r.uuid " +
-                        "WHERE r.uuid = ?";
+                "   JOIN contact cnt " +
+                "       ON cnt.resume_uuid = r.uuid " +
+                "WHERE r.uuid = ?";
 
         return helper.executeQuery(query, statement -> {
             statement.setString(1, uuid);
