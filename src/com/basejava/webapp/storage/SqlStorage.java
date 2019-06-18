@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SqlStorage implements Storage {
     private final SqlHelper helper;
@@ -46,6 +47,16 @@ public class SqlStorage implements Storage {
             statement.execute();
             return null;
         });
+
+        for (Map.Entry<ContactType, String> contact: resume.getContacts().entrySet()) {
+            query = "INSERT INTO contact(resume_uuid, type, value) VALUES (?, ?, ?)";
+            helper.executeQuery(query, statement -> {
+                statement.setString(1, resume.getUuid());
+                statement.setString(2, contact.getKey().name());
+                statement.setString(3, contact.getValue());
+                return null;
+            });
+        }
     }
 
     @Override
@@ -53,7 +64,7 @@ public class SqlStorage implements Storage {
         // language=PostgreSQL
         String query =
                 "SELECT * FROM resume r " +
-                "   JOIN contact cnt " +
+                "   LEFT JOIN contact cnt " +
                 "       ON cnt.resume_uuid = r.uuid " +
                 "WHERE r.uuid = ?";
 
