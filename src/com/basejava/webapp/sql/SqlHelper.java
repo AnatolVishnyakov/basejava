@@ -3,10 +3,7 @@ package com.basejava.webapp.sql;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.StorageException;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class SqlHelper {
     private static final String DUPLICATE_CODE = "23505";
@@ -25,6 +22,14 @@ public class SqlHelper {
                 throw new ExistStorageException(null);
             }
             throw new StorageException(e);
+        }
+    }
+
+    public <T> T transactionExecute(SqlTransaction<T> executor) {
+        try (Connection connection = connectionFactory.getConnection()) {
+            // TODO
+        } catch (SQLException e) {
+            // TODO
         }
     }
 }
