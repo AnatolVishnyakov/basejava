@@ -25,11 +25,19 @@ public class SqlHelper {
         }
     }
 
-    public <T> T transactionExecute(SqlTransaction<T> executor) {
+    public <T> T transactionalExecute(SqlTransaction<T> executor) {
         try (Connection connection = connectionFactory.getConnection()) {
-            // TODO
+            try {
+                connection.setAutoCommit(false);
+                T result = executor.execute(connection);
+                connection.commit();
+                return result;
+            } catch (SQLException e) {
+                connection.rollback();
+                throw e;
+            }
         } catch (SQLException e) {
-            // TODO
+            throw new StorageException(e);
         }
     }
 }

@@ -19,7 +19,7 @@ public class ResumeTest {
 
     static {
         // Init Resume-1
-        RESUME_1.setSection(SectionType.PERSONAL, new TextSection("Test personal 1"));
+/*        RESUME_1.setSection(SectionType.PERSONAL, new TextSection("Test personal 1"));
         RESUME_1.setSection(SectionType.OBJECTIVE, new TextSection("Test objective 1"));
         RESUME_1.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Test achievement 1", "Test achievement 2")));
         RESUME_1.setSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("Test qualification 1", "Test qualification 2")));
@@ -44,10 +44,11 @@ public class ResumeTest {
                                 "Test description"
                         )
                 )
-        )));
+        )));*/
         RESUME_1.setContact(ContactType.WEBSITE, "www.testsite.com");
 
         // Init Resume-2
+/*
         RESUME_2.setSection(SectionType.PERSONAL, new TextSection("Test personal 2"));
         RESUME_2.setSection(SectionType.OBJECTIVE, new TextSection("Test objective 2"));
         RESUME_2.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Test achievement 1", "Test achievement 2")));
@@ -74,10 +75,11 @@ public class ResumeTest {
                         )
                 )
         )));
+*/
         RESUME_2.setContact(ContactType.WEBSITE, "www.testsite.com");
 
         // Init Resume-3
-        RESUME_3.setSection(SectionType.PERSONAL, new TextSection("Test personal 3"));
+/*      RESUME_3.setSection(SectionType.PERSONAL, new TextSection("Test personal 3"));
         RESUME_3.setSection(SectionType.OBJECTIVE, new TextSection("Test objective 3"));
         RESUME_3.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Test achievement 1", "Test achievement 2")));
         RESUME_3.setSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("Test qualification 1", "Test qualification 2")));
@@ -103,10 +105,11 @@ public class ResumeTest {
                         )
                 )
         )));
+ */
         RESUME_3.setContact(ContactType.WEBSITE, "www.testsite.com");
 
         // Init Resume-4
-        RESUME_4.setSection(SectionType.PERSONAL, new TextSection("Test personal 4"));
+/*        RESUME_4.setSection(SectionType.PERSONAL, new TextSection("Test personal 4"));
         RESUME_4.setSection(SectionType.OBJECTIVE, new TextSection("Test objective 4"));
         RESUME_4.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Test achievement 1", "Test achievement 2")));
         RESUME_4.setSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("Test qualification 1", "Test qualification 2")));
@@ -127,7 +130,7 @@ public class ResumeTest {
                         new Institution.Position("Test education 4", LocalDate.of(2012, 10, 1), LocalDate.of(2013, 10, 12), "Test description"
                         )
                 )
-        )));
+        )));*/
         RESUME_4.setContact(ContactType.WEBSITE, "www.testsite.com");
     }
 

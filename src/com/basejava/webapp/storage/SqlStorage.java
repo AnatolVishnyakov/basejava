@@ -4,6 +4,7 @@ import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.ContactType;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.sql.SqlHelper;
+import com.basejava.webapp.sql.SqlTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,12 +27,13 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        String query = "UPDATE resume SET full_name = ? WHERE uuid = ?";
-        helper.executeQuery(query, statement -> {
-            statement.setString(1, resume.getFullName());
-            statement.setString(2, resume.getUuid());
-            if (statement.executeUpdate() == 0) {
-                throw new NotExistStorageException(resume.getUuid());
+        helper.transactionalExecute(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
+                statement.setString(1, resume.getFullName());
+                statement.setString(2, resume.getUuid());
+                if (statement.executeUpdate() == 0) {
+                    throw new NotExistStorageException(resume.getUuid());
+                }
             }
             return null;
         });
@@ -39,24 +41,24 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        // language=PostgreSQL
-        String query = "INSERT INTO resume(uuid, full_name) VALUES (?, ?)";
-        helper.executeQuery(query, statement -> {
-            statement.setString(1, resume.getUuid());
-            statement.setString(2, resume.getFullName());
-            statement.execute();
+        helper.transactionalExecute(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO resume(uuid, full_name) VALUES (?, ?)")) {
+                statement.setString(1, resume.getUuid());
+                statement.setString(2, resume.getFullName());
+                statement.execute();
+            }
+
+            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO contact(resume_uuid, type, value) VALUES (?, ?, ?)")) {
+                for (Map.Entry<ContactType, String> contact : resume.getContacts().entrySet()) {
+                    statement.setString(1, resume.getUuid());
+                    statement.setString(2, contact.getKey().name());
+                    statement.setString(3, contact.getValue());
+                    statement.addBatch();
+                }
+                statement.executeBatch();
+            }
             return null;
         });
-
-        for (Map.Entry<ContactType, String> contact: resume.getContacts().entrySet()) {
-            query = "INSERT INTO contact(resume_uuid, type, value) VALUES (?, ?, ?)";
-            helper.executeQuery(query, statement -> {
-                statement.setString(1, resume.getUuid());
-                statement.setString(2, contact.getKey().name());
-                statement.setString(3, contact.getValue());
-                return null;
-            });
-        }
     }
 
     @Override
@@ -64,9 +66,9 @@ public class SqlStorage implements Storage {
         // language=PostgreSQL
         String query =
                 "SELECT * FROM resume r " +
-                "   LEFT JOIN contact cnt " +
-                "       ON cnt.resume_uuid = r.uuid " +
-                "WHERE r.uuid = ?";
+                        "   LEFT JOIN contact cnt " +
+                        "       ON cnt.resume_uuid = r.uuid " +
+                        "WHERE r.uuid = ?";
 
         return helper.executeQuery(query, statement -> {
             statement.setString(1, uuid);
