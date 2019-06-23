@@ -3,6 +3,7 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.Config;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
+import com.basejava.webapp.model.ContactType;
 import com.basejava.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,6 +54,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void update() {
         Resume expectedResume = new Resume(UUID_1, "Francisco Domingo Carlos Andres Sebastian D'anconia");
+        expectedResume.setContact(ContactType.WEBSITE, "www.testsite.com");
         storage.update(expectedResume);
 
         Resume actualResume = storage.get(UUID_1);

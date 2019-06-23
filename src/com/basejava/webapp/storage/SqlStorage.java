@@ -1,16 +1,16 @@
 package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.NotExistStorageException;
+import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.ContactType;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.sql.SqlHelper;
-import com.basejava.webapp.sql.SqlTransaction;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.sql.SQLException;
+import java.util.*;
 
 public class SqlStorage implements Storage {
     private final SqlHelper helper;
@@ -48,15 +48,7 @@ public class SqlStorage implements Storage {
                 statement.execute();
             }
 
-            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO contact(resume_uuid, type, value) VALUES (?, ?, ?)")) {
-                for (Map.Entry<ContactType, String> contact : resume.getContacts().entrySet()) {
-                    statement.setString(1, resume.getUuid());
-                    statement.setString(2, contact.getKey().name());
-                    statement.setString(3, contact.getValue());
-                    statement.addBatch();
-                }
-                statement.executeBatch();
-            }
+            insertContact(connection, resume);
             return null;
         });
     }
@@ -99,16 +91,33 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        String query = "SELECT * FROM resume ORDER BY full_name";
+        // language=PostgreSQL
+        String query = "SELECT * FROM resume r " +
+                "LEFT JOIN contact cnt ON cnt.resume_uuid=r.uuid " +
+                "ORDER BY r.full_name";
         return helper.executeQuery(query, statement -> {
             ResultSet result = statement.executeQuery();
-            List<Resume> resumes = new ArrayList<>();
+            Map<String, Resume> resumes = new HashMap<>();
             while (result.next()) {
                 String uuid = result.getString("uuid").trim();
-                String fullName = result.getString("full_name");
-                resumes.add(new Resume(uuid, fullName));
+
+                Resume resume = resumes.get(uuid);
+                if (resume == null) {
+                    String fullName = result.getString("full_name");
+                    resume = new Resume(uuid, fullName);
+                    resumes.put(uuid, resume);
+                }
+
+                String contact = result.getString("value");
+                ContactType contactType = ContactType.valueOf(result.getString("type"));
+                resume.setContact(contactType, contact);
             }
-            return resumes;
+
+            List<Resume> listResume = new ArrayList<>(resumes.values());
+            listResume.sort(Comparator
+                    .comparing(Resume::getFullName)
+                    .thenComparing(Resume::getUuid));
+            return listResume;
         });
     }
 
@@ -123,5 +132,21 @@ public class SqlStorage implements Storage {
                     ? result.getInt(COUNT_COLUMN)
                     : 0;
         });
+    }
+
+    private void insertContact(Connection connection, Resume resume) {
+        // language=PostgreSQL
+        String query = "INSERT INTO contact(resume_uuid, type, value) VALUES (?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            for (Map.Entry<ContactType, String> contact : resume.getContacts().entrySet()) {
+                statement.setString(1, resume.getUuid());
+                statement.setString(2, contact.getKey().name());
+                statement.setString(3, contact.getValue());
+                statement.addBatch();
+            }
+            statement.executeBatch();
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 }
