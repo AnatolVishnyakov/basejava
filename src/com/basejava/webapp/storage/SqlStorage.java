@@ -98,30 +98,20 @@ public class SqlStorage implements Storage {
         // language=PostgreSQL
         String query = "SELECT * FROM resume r " +
                 "LEFT JOIN contact cnt ON cnt.resume_uuid=r.uuid " +
-                "ORDER BY r.full_name";
+                "ORDER BY r.full_name, r.uuid";
         return helper.executeQuery(query, statement -> {
             ResultSet result = statement.executeQuery();
-            Map<String, Resume> resumes = new HashMap<>();
+            Map<String, Resume> resumes = new LinkedHashMap<>();
             while (result.next()) {
                 String uuid = result.getString("uuid").trim();
-
-                Resume resume = resumes.get(uuid);
-                if (resume == null) {
-                    String fullName = result.getString("full_name");
-                    resume = new Resume(uuid, fullName);
-                    resumes.put(uuid, resume);
-                }
-
+                String fullName = result.getString("full_name");
                 String contact = result.getString("value");
                 ContactType contactType = ContactType.valueOf(result.getString("type"));
-                resume.setContact(contactType, contact);
+                resumes.computeIfAbsent(uuid, key -> new Resume(key, fullName))
+                        .setContact(contactType, contact);
             }
 
-            List<Resume> listResume = new ArrayList<>(resumes.values());
-            listResume.sort(Comparator
-                    .comparing(Resume::getFullName)
-                    .thenComparing(Resume::getUuid));
-            return listResume;
+            return new ArrayList<>(resumes.values());
         });
     }
 
