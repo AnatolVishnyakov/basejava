@@ -1,7 +1,6 @@
 package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.NotExistStorageException;
-import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.ContactType;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.sql.SqlHelper;
@@ -10,7 +9,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SqlStorage implements Storage {
     private final SqlHelper helper;
@@ -21,6 +23,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
+        // language=PostgreSQL
         String query = "DELETE FROM resume";
         helper.executeQuery(query, PreparedStatement::execute);
     }
@@ -35,6 +38,8 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(resume.getUuid());
                 }
             }
+            deleteContact(connection, resume);
+            insertContact(connection, resume);
             return null;
         });
     }
@@ -71,9 +76,7 @@ public class SqlStorage implements Storage {
 
             Resume resume = new Resume(uuid, result.getString("full_name"));
             do {
-                String value = result.getString("value");
-                ContactType type = ContactType.valueOf(result.getString("type"));
-                resume.setContact(type, value);
+                addContact(result, resume);
             } while (result.next());
             return resume;
         });
@@ -81,6 +84,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
+        // language=PostgreSQL
         String query = "DELETE FROM resume WHERE uuid = ?";
         helper.executeQuery(query, statement -> {
             statement.setString(1, uuid);
@@ -123,6 +127,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
+        // language=PostgreSQL
         final String query = "SELECT count(*) AS Total FROM resume";
         final int COUNT_COLUMN = 1;
 
@@ -134,7 +139,7 @@ public class SqlStorage implements Storage {
         });
     }
 
-    private void insertContact(Connection connection, Resume resume) {
+    private void insertContact(Connection connection, Resume resume) throws SQLException {
         // language=PostgreSQL
         String query = "INSERT INTO contact(resume_uuid, type, value) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -145,8 +150,23 @@ public class SqlStorage implements Storage {
                 statement.addBatch();
             }
             statement.executeBatch();
-        } catch (SQLException e) {
-            throw new StorageException(e);
         }
+    }
+
+    private void addContact(ResultSet result, Resume resume) throws SQLException {
+        String contact = result.getString("value");
+        if (contact != null) {
+            ContactType contactType = ContactType.valueOf(result.getString("type"));
+            resume.setContact(contactType, contact);
+        }
+    }
+
+    private void deleteContact(Connection connection, Resume resume) {
+        // language=PostgreSQL
+        helper.executeQuery("DELETE  FROM contact WHERE resume_uuid = ?", ps -> {
+            ps.setString(1, resume.getUuid());
+            ps.execute();
+            return null;
+        });
     }
 }

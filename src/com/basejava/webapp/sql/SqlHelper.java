@@ -1,6 +1,5 @@
 package com.basejava.webapp.sql;
 
-import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.StorageException;
 
 import java.sql.Connection;
@@ -9,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SqlHelper {
-    private static final String DUPLICATE_CODE = "23505";
     private final ConnectionFactory connectionFactory;
 
     public SqlHelper(String databaseUrl, String databaseUser, String databasePassword) {
@@ -21,10 +19,7 @@ public class SqlHelper {
              PreparedStatement statement = connection.prepareStatement(query)) {
             return executor.execute(statement);
         } catch (SQLException e) {
-            if (e.getSQLState().equals(DUPLICATE_CODE)) {
-                throw new ExistStorageException(null);
-            }
-            throw new StorageException(e);
+            throw ExceptionHandler.convertException(e);
         }
     }
 

@@ -15,6 +15,7 @@ import java.util.List;
 
 import static com.basejava.webapp.ResumeTest.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public abstract class AbstractStorageTest {
     protected static final File PATH_STORAGE_DIRECTORY = Config.getInstance().getStorageDirectory();
@@ -52,9 +53,27 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
+    public void getAllSortedIfEmptyContacts() {
+        RESUME_1.getContacts().clear();
+        RESUME_2.getContacts().clear();
+        RESUME_3.getContacts().clear();
+        List<Resume> actualValue = storage.getAllSorted();
+        assertEquals(3, actualValue.size());
+
+        List<Resume> expected = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        expected.sort(RESUME_COMPARATOR);
+
+        assertEquals(expected, actualValue);
+        assertEquals(0, RESUME_1.getContacts().size());
+        assertEquals(0, RESUME_2.getContacts().size());
+        assertEquals(0, RESUME_3.getContacts().size());
+    }
+
+    @Test
     public void update() {
         Resume expectedResume = new Resume(UUID_1, "Francisco Domingo Carlos Andres Sebastian D'anconia");
         expectedResume.setContact(ContactType.WEBSITE, "www.testsite.com");
+        expectedResume.setContact(ContactType.EMAIL, "test@testsite.com");
         storage.update(expectedResume);
 
         Resume actualResume = storage.get(UUID_1);
@@ -95,5 +114,12 @@ public abstract class AbstractStorageTest {
         assertEquals(RESUME_1, storage.get(UUID_1));
         assertEquals(RESUME_2, storage.get(UUID_2));
         assertEquals(RESUME_3, storage.get(UUID_3));
+    }
+
+    @Test
+    public void getIfEmptyContacts() {
+        RESUME_1.getContacts().clear();
+        assertEquals(0, RESUME_1.getContacts().size());
+        assertNull(RESUME_1.getContact(ContactType.WEBSITE));
     }
 }
