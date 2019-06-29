@@ -2,7 +2,6 @@ package com.basejava.webapp;
 
 import com.basejava.webapp.model.*;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -12,10 +11,12 @@ public class ResumeTest {
     public static final String UUID_2 = UUID.randomUUID().toString();
     public static final String UUID_3 = UUID.randomUUID().toString();
     public static final String UUID_4 = UUID.randomUUID().toString();
+    public static final String UUID_5 = UUID.randomUUID().toString();
     public static final Resume RESUME_1 = new Resume(UUID_1, "Frank Rearden");
     public static final Resume RESUME_2 = new Resume(UUID_2, "Petrov Petr Petrovich");
     public static final Resume RESUME_3 = new Resume(UUID_3, "Ivanov Ivan Ivanovich");
     public static final Resume RESUME_4 = new Resume(UUID_4, "Sidorov Ivan Ivanovich");
+    public static final Resume RESUME_5 = new Resume(UUID_5, "Kelly Johns");
 
     static {
         // Init Resume-1

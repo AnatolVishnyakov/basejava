@@ -103,12 +103,10 @@ public class SqlStorage implements Storage {
             ResultSet result = statement.executeQuery();
             Map<String, Resume> resumes = new LinkedHashMap<>();
             while (result.next()) {
-                String uuid = result.getString("uuid").trim();
+                String uuid = result.getString("uuid");
                 String fullName = result.getString("full_name");
-                String contact = result.getString("value");
-                ContactType contactType = ContactType.valueOf(result.getString("type"));
-                resumes.computeIfAbsent(uuid, key -> new Resume(key, fullName))
-                        .setContact(contactType, contact);
+                Resume resume = resumes.computeIfAbsent(uuid, key -> new Resume(key, fullName));
+                addContact(result, resume);
             }
 
             return new ArrayList<>(resumes.values());
@@ -151,12 +149,11 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void deleteContact(Connection connection, Resume resume) {
+    private void deleteContact(Connection connection, Resume resume) throws SQLException {
         // language=PostgreSQL
-        helper.executeQuery("DELETE  FROM contact WHERE resume_uuid = ?", ps -> {
+        try (PreparedStatement ps = connection.prepareStatement("DELETE  FROM contact WHERE resume_uuid = ?")) {
             ps.setString(1, resume.getUuid());
             ps.execute();
-            return null;
-        });
+        }
     }
 }

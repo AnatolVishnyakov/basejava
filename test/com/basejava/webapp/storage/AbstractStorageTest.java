@@ -53,20 +53,12 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void getAllSortedIfEmptyContacts() {
-        RESUME_1.getContacts().clear();
-        RESUME_2.getContacts().clear();
-        RESUME_3.getContacts().clear();
-        List<Resume> actualValue = storage.getAllSorted();
-        assertEquals(3, actualValue.size());
-
-        List<Resume> expected = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
-        expected.sort(RESUME_COMPARATOR);
-
-        assertEquals(expected, actualValue);
-        assertEquals(0, RESUME_1.getContacts().size());
-        assertEquals(0, RESUME_2.getContacts().size());
-        assertEquals(0, RESUME_3.getContacts().size());
+    public void emptyContacts() {
+        storage.clear();
+        storage.save(RESUME_5);
+        List<Resume> resumes = storage.getAllSorted();
+        assertEquals(1, resumes.size());
+        resumes.forEach(resume -> assertEquals(0, resume.getContacts().size()));
     }
 
     @Test
