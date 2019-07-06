@@ -27,8 +27,11 @@ public class SqlStorage implements Storage {
     @Override
     public void clear() {
         // language=PostgreSQL
-        String query = "DELETE FROM resume";
-        helper.executeQuery(query, PreparedStatement::execute);
+        helper.executeQuery("DELETE FROM resume", PreparedStatement::execute);
+        // language=PostgreSQL
+        helper.executeQuery("DELETE FROM contact", PreparedStatement::execute);
+        // language=PostgreSQL
+        helper.executeQuery("DELETE FROM section", PreparedStatement::execute);
     }
 
     @Override
