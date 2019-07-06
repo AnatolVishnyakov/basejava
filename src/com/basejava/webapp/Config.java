@@ -1,5 +1,8 @@
 package com.basejava.webapp;
 
+import com.basejava.webapp.storage.SqlStorage;
+import com.basejava.webapp.storage.Storage;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -40,5 +43,9 @@ public class Config {
 
     public String getDatabasePassword() {
         return properties.getProperty("db.password");
+    }
+
+    public static Storage getStorage() {
+        return new SqlStorage(INSTANCE.getDatabaseUrl(), INSTANCE.getDatabaseUser(), INSTANCE.getDatabasePassword());
     }
 }

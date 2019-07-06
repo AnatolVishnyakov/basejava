@@ -2,7 +2,6 @@ package com.basejava.webapp.web;
 
 import com.basejava.webapp.Config;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.storage.SqlStorage;
 import com.basejava.webapp.storage.Storage;
 
 import javax.servlet.http.HttpServlet;
@@ -25,8 +24,7 @@ public class ResumeServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 
-        Config config = Config.getInstance();
-        Storage storage = new SqlStorage(config.getDatabaseUrl(), config.getDatabaseUser(), config.getDatabasePassword());
+        Storage storage = Config.getStorage();
         // language=html
         StringBuilder record = new StringBuilder();
         String uuid = request.getParameter("uuid");
