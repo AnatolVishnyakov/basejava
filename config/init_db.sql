@@ -11,9 +11,7 @@ create table contact
       primary key,
   type        text     not null,
   value       text     not null,
-  resume_uuid char(36) not null
-    constraint contact_resume_uuid_fk
-    references resume
+  resume_uuid char(36) not null references resume on delete cascade
 );
 
 create unique index contact_type_uuid_index
