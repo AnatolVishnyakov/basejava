@@ -15,6 +15,8 @@ import java.nio.file.Paths;
 import static java.lang.String.format;
 
 public class ResumeServlet extends HttpServlet {
+    private static Storage storage = Config.getStorage();
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
     }
 
@@ -24,7 +26,6 @@ public class ResumeServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
 
-        Storage storage = Config.getStorage();
         // language=html
         StringBuilder record = new StringBuilder();
         String uuid = request.getParameter("uuid");
