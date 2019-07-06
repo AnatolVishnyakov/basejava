@@ -172,10 +172,11 @@ public class SqlStorage implements Storage {
         // language=PostgreSQL
         String query = "INSERT INTO section(resume_uuid, type, content) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            for (Map.Entry<SectionType, AbstractSection> section : resume.getSections().entrySet()) {
+            for (Map.Entry<SectionType, AbstractSection> value : resume.getSections().entrySet()) {
                 statement.setString(1, resume.getUuid());
-                statement.setString(2, section.getKey().toString());
-                statement.setString(3, section.getValue().toString());
+                statement.setString(2, value.getKey().name());
+                AbstractSection section = value.getValue();
+                statement.setString(3, JsonParser.write(section, AbstractSection.class));
                 statement.addBatch();
             }
             statement.executeBatch();

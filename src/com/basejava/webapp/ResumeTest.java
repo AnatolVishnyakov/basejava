@@ -20,10 +20,11 @@ public class ResumeTest {
 
     static {
         // Init Resume-1
-/*        RESUME_1.setSection(SectionType.PERSONAL, new TextSection("Test personal 1"));
+        RESUME_1.setSection(SectionType.PERSONAL, new TextSection("Test personal 1"));
         RESUME_1.setSection(SectionType.OBJECTIVE, new TextSection("Test objective 1"));
         RESUME_1.setSection(SectionType.ACHIEVEMENT, new ListSection(Arrays.asList("Test achievement 1", "Test achievement 2")));
         RESUME_1.setSection(SectionType.QUALIFICATIONS, new ListSection(Arrays.asList("Test qualification 1", "Test qualification 2")));
+/*
         RESUME_1.setSection(SectionType.EXPERIENCE, new InstitutionSection(Arrays.asList(
                 new Institution(
                         new HyperLink("TestPageExperience 1", "TestURL"),
@@ -45,7 +46,8 @@ public class ResumeTest {
                                 "Test description"
                         )
                 )
-        )));*/
+        )));
+*/
         RESUME_1.setContact(ContactType.WEBSITE, "www.testsite.com");
 
         // Init Resume-2
