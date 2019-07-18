@@ -45,8 +45,10 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(resume.getUuid());
                 }
             }
-            deleteContact(connection, resume);
-            insertContact(connection, resume);
+            deleteContacts(connection, resume);
+            insertContacts(connection, resume);
+            deleteSection(connection, resume);
+            insertSection(connection, resume);
             return null;
         });
     }
@@ -60,7 +62,7 @@ public class SqlStorage implements Storage {
                 statement.execute();
             }
 
-            insertContact(connection, resume);
+            insertContacts(connection, resume);
             insertSection(connection, resume);
             return null;
         });
@@ -68,24 +70,33 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        // language=PostgreSQL
-        String query =
-                "SELECT * FROM resume r " +
-                        "   LEFT JOIN contact cnt " +
-                        "       ON cnt.resume_uuid = r.uuid " +
-                        "WHERE r.uuid = ?";
+        return helper.transactionalExecute(connection -> {
+            Resume resume;
 
-        return helper.executeQuery(query, statement -> {
-            statement.setString(1, uuid);
-            ResultSet result = statement.executeQuery();
-            if (!result.next()) {
-                throw new NotExistStorageException(uuid);
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM resume WHERE uuid = ?")) {
+                statement.setString(1, uuid);
+                ResultSet result = statement.executeQuery();
+                if (!result.next()) {
+                    throw new NotExistStorageException(uuid);
+                }
+                resume = new Resume(uuid, result.getString("full_name"));
             }
 
-            Resume resume = new Resume(uuid, result.getString("full_name"));
-            do {
-                addContact(result, resume);
-            } while (result.next());
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM contact WHERE resume_uuid = ?")) {
+                statement.setString(1, uuid);
+                ResultSet result = statement.executeQuery();
+                while (result.next()) {
+                    addContact(result, resume);
+                }
+            }
+
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM section WHERE resume_uuid = ?")) {
+                statement.setString(1, uuid);
+                ResultSet result = statement.executeQuery();
+                while (result.next()) {
+                    addSection(result, resume);
+                }
+            }
             return resume;
         });
     }
@@ -154,7 +165,7 @@ public class SqlStorage implements Storage {
         });
     }
 
-    private void insertContact(Connection connection, Resume resume) throws SQLException {
+    private void insertContacts(Connection connection, Resume resume) throws SQLException {
         // language=PostgreSQL
         String query = "INSERT INTO contact(resume_uuid, type, value) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -199,11 +210,20 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void deleteContact(Connection connection, Resume resume) throws SQLException {
+    private void deleteContacts(Connection connection, Resume resume) throws SQLException {
         // language=PostgreSQL
-        try (PreparedStatement ps = connection.prepareStatement("DELETE  FROM contact WHERE resume_uuid = ?")) {
-            ps.setString(1, resume.getUuid());
-            ps.execute();
+        deleteRecords(connection, resume, "DELETE  FROM contact WHERE resume_uuid = ?");
+    }
+
+    private void deleteSection(Connection connection, Resume resume) throws SQLException {
+        // language=PostgreSQL
+        deleteRecords(connection, resume, "DELETE  FROM section WHERE resume_uuid = ?");
+    }
+
+    private void deleteRecords(Connection connection, Resume resume, String query) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, resume.getUuid());
+            statement.execute();
         }
     }
 }
