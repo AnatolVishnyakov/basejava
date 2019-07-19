@@ -21,6 +21,11 @@ public class SqlStorage implements Storage {
     private final SqlHelper helper;
 
     public SqlStorage(String databaseUrl, String databaseUser, String databasePassword) {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
         this.helper = new SqlHelper(databaseUrl, databaseUser, databasePassword);
     }
 
@@ -38,7 +43,7 @@ public class SqlStorage implements Storage {
     public void update(Resume resume) {
         // language=PostgreSQL
         helper.transactionalExecute(connection -> {
-            try (PreparedStatement statement = connection.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
+            try (PreparedStatement statement = connection.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid_field = ?")) {
                 statement.setString(1, resume.getFullName());
                 statement.setString(2, resume.getUuid());
                 if (statement.executeUpdate() == 0) {
@@ -47,8 +52,8 @@ public class SqlStorage implements Storage {
             }
             deleteContacts(connection, resume);
             insertContacts(connection, resume);
-            deleteSection(connection, resume);
-            insertSection(connection, resume);
+            deleteSections(connection, resume);
+            insertSections(connection, resume);
             return null;
         });
     }
@@ -56,14 +61,14 @@ public class SqlStorage implements Storage {
     @Override
     public void save(Resume resume) {
         helper.transactionalExecute(connection -> {
-            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO resume(uuid, full_name) VALUES (?, ?)")) {
+            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO resume(uuid_field, full_name) VALUES (?, ?)")) {
                 statement.setString(1, resume.getUuid());
                 statement.setString(2, resume.getFullName());
                 statement.execute();
             }
 
             insertContacts(connection, resume);
-            insertSection(connection, resume);
+            insertSections(connection, resume);
             return null;
         });
     }
@@ -73,7 +78,7 @@ public class SqlStorage implements Storage {
         return helper.transactionalExecute(connection -> {
             Resume resume;
 
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM resume WHERE uuid = ?")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM resume WHERE uuid_field = ?")) {
                 statement.setString(1, uuid);
                 ResultSet result = statement.executeQuery();
                 if (!result.next()) {
@@ -104,7 +109,7 @@ public class SqlStorage implements Storage {
     @Override
     public void delete(String uuid) {
         // language=PostgreSQL
-        String query = "DELETE FROM resume WHERE uuid = ?";
+        String query = "DELETE FROM resume WHERE uuid_field = ?";
         helper.executeQuery(query, statement -> {
             statement.setString(1, uuid);
             statement.execute();
@@ -117,13 +122,13 @@ public class SqlStorage implements Storage {
         Map<String, Resume> resumes = new LinkedHashMap<>();
         return helper.transactionalExecute(connection -> {
             // Резюме
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM resume ORDER BY full_name, uuid")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM resume ORDER BY full_name, uuid_field")) {
                 ResultSet result = statement.executeQuery();
                 while (result.next()) {
-                    String uuid = result.getString("uuid");
+                    String uuid_field = result.getString("uuid_field");
                     String fullName = result.getString("full_name");
-                    Resume resume = new Resume(uuid, fullName);
-                    resumes.put(uuid, resume);
+                    Resume resume = new Resume(uuid_field, fullName);
+                    resumes.put(uuid_field, resume);
                 }
             }
 
@@ -131,8 +136,8 @@ public class SqlStorage implements Storage {
             try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM contact")) {
                 ResultSet result = statement.executeQuery();
                 while (result.next()) {
-                    String uuid = result.getString("resume_uuid");
-                    Resume resume = resumes.get(uuid);
+                    String uuid_field = result.getString("resume_uuid");
+                    Resume resume = resumes.get(uuid_field);
                     addContact(result, resume);
                 }
             }
@@ -141,8 +146,8 @@ public class SqlStorage implements Storage {
             try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM section")) {
                 ResultSet result = statement.executeQuery();
                 while (result.next()) {
-                    String uuid = result.getString("resume_uuid");
-                    Resume resume = resumes.get(uuid);
+                    String uuid_field = result.getString("resume_uuid");
+                    Resume resume = resumes.get(uuid_field);
                     addSection(result, resume);
                 }
             }
@@ -179,7 +184,7 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void insertSection(Connection connection, Resume resume) throws SQLException {
+    private void insertSections(Connection connection, Resume resume) throws SQLException {
         // language=PostgreSQL
         String query = "INSERT INTO section(resume_uuid, type, content) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -215,7 +220,7 @@ public class SqlStorage implements Storage {
         deleteRecords(connection, resume, "DELETE  FROM contact WHERE resume_uuid = ?");
     }
 
-    private void deleteSection(Connection connection, Resume resume) throws SQLException {
+    private void deleteSections(Connection connection, Resume resume) throws SQLException {
         // language=PostgreSQL
         deleteRecords(connection, resume, "DELETE  FROM section WHERE resume_uuid = ?");
     }
