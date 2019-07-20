@@ -48,6 +48,7 @@ public class ResumeTestData {
                 )
         )));
         RESUME_1.setContact(ContactType.WEBSITE, "www.testsite.com");
+        RESUME_1.setContact(ContactType.EMAIL, "test_1@ololo.ru");
 
         // Init Resume-2
         RESUME_2.setSection(SectionType.PERSONAL, new TextSection("Test personal 2"));
@@ -77,6 +78,7 @@ public class ResumeTestData {
                 )
         )));
         RESUME_2.setContact(ContactType.WEBSITE, "www.testsite.com");
+        RESUME_2.setContact(ContactType.EMAIL, "test_2@ololo.ru");
 
         // Init Resume-3
         RESUME_3.setSection(SectionType.PERSONAL, new TextSection("Test personal 3"));
@@ -106,6 +108,7 @@ public class ResumeTestData {
                 )
         )));
         RESUME_3.setContact(ContactType.WEBSITE, "www.testsite.com");
+        RESUME_3.setContact(ContactType.EMAIL, "test_3@ololo.ru");
 
         // Init Resume-4
         RESUME_4.setSection(SectionType.PERSONAL, new TextSection("Test personal 4"));
@@ -131,5 +134,6 @@ public class ResumeTestData {
                 )
         )));
         RESUME_4.setContact(ContactType.WEBSITE, "www.testsite.com");
+        RESUME_4.setContact(ContactType.EMAIL, "test_4@ololo.ru");
     }
 }

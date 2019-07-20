@@ -53,7 +53,7 @@ public class Config {
 
     private static File getHomeDir() {
         String path = System.getProperty("homeDir");
-        File homeDir = !path.isEmpty()
+        File homeDir = (path != null && !path.isEmpty())
                 ? new File(path)
                 : new File(".");
 
