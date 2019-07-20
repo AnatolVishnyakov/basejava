@@ -24,6 +24,8 @@
         <tr>
             <th>Имя</th>
             <th>Email</th>
+            <th></th>
+            <th></th>
         </tr>
 
         <c:forEach items="${resumes}" var="resume">

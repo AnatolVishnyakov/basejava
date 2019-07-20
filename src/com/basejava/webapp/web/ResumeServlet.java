@@ -41,6 +41,7 @@ public class ResumeServlet extends HttpServlet {
         response.sendRedirect("resume");
     }
 
+    // TODO Добавление резюме
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uuid = request.getParameter("uuid");
         String action = request.getParameter("action");
@@ -51,6 +52,8 @@ public class ResumeServlet extends HttpServlet {
         } else {
             Resume resume;
             switch (action) {
+                case "add":
+                    return;
                 case "delete":
                     storage.delete(uuid);
                     response.sendRedirect("resume");
