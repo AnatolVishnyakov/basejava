@@ -1,3 +1,7 @@
+<%@ page import="com.basejava.webapp.model.InstitutionSection" %>
+<%@ page import="com.basejava.webapp.model.ListSection" %>
+<%@ page import="com.basejava.webapp.model.TextSection" %>
+<%@ page import="com.basejava.webapp.utils.HtmlUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -34,6 +38,84 @@
             <br/>
         </c:forEach>
     </p>
+    <hr>
+    <table cellpadding="2">
+        <c:forEach var="entry" items="${resume.sections}">
+            <jsp:useBean id="entry"
+                         type="java.util.Map.Entry<com.basejava.webapp.model.SectionType, com.basejava.webapp.model.AbstractSection>"/>
+
+            <c:set var="sectionType" value="${entry.key}"/>
+            <c:set var="section" value="${entry.value}"/>
+
+            <jsp:useBean id="section" type="com.basejava.webapp.model.AbstractSection"/>
+            <tr>
+                <td>
+                    <h3>
+                        <a name="${sectionType.name()}">${sectionType.title}</a>
+                    </h3>
+                </td>
+                <c:if test="${sectionType == 'OBJECTIVE'}">
+                    <td>
+                        <h3>
+                            <%=((TextSection) section).getContent()%>
+                        </h3>
+                    </td>
+                </c:if>
+            </tr>
+            <c:if test="${sectionType != 'OBJECTIVE'}">
+                <c:choose>
+                    <c:when test="${sectionType == 'PERSONAL'}">
+                        <td>
+                            <h3>
+                                <%=((TextSection) section).getContent()%>
+                            </h3>
+                        </td>
+                    </c:when>
+                    <c:when test="${sectionType == 'QUALIFICATIONS' || sectionType == 'ACHIEVEMENT'}">
+                        <tr>
+                            <td>
+                                <ul>
+                                    <c:forEach var="content" items="<%=((ListSection) section).getContents()%>">
+                                        <li>${content}</li>
+                                    </c:forEach>
+                                </ul>
+                            </td>
+                        </tr>
+                    </c:when>
+                    <c:when test="${sectionType == 'EXPERIENCE' || sectionType == 'EDUCATION'}">
+                        <c:forEach var="institute" items="<%=((InstitutionSection) section).getInstitutions()%>">
+                            <tr>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${empty institute.homePage.url}">
+                                            <h3>${institute.homePage.url}</h3>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <h3>
+                                                <a href="${institute.homePage.url}">${institute.homePage.name}</a>
+                                            </h3>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
+                            <c:forEach var="position" items="${institute.positions}">
+                                <jsp:useBean id="position" type="com.basejava.webapp.model.Institution.Position"/>
+                                <tr>
+                                    <td><%=HtmlUtil.formatDates(position)%>
+                                    </td>
+                                    <td>
+                                        <b>${position.title}</b>
+                                        <br>${position.description}
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:forEach>
+                    </c:when>
+                </c:choose>
+            </c:if>
+        </c:forEach>
+        <button onclick="window.history.back()">Ok</button>
+    </table>
 </section>
 
 <jsp:include page="fragments/footer.jsp"/>

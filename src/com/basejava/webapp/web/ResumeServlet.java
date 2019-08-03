@@ -3,6 +3,7 @@ package com.basejava.webapp.web;
 import com.basejava.webapp.Config;
 import com.basejava.webapp.model.ContactType;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.model.SectionType;
 import com.basejava.webapp.storage.Storage;
 
 import javax.servlet.ServletConfig;
@@ -37,6 +38,13 @@ public class ResumeServlet extends HttpServlet {
                 resume.getContacts().remove(contactType);
             }
         }
+
+        for (SectionType sectionType : SectionType.values()) {
+            String value = request.getParameter(sectionType.name());
+            String[] values = request.getParameterValues(sectionType.name());
+            System.out.println(value);
+        }
+
         storage.update(resume);
         response.sendRedirect("resume");
     }
