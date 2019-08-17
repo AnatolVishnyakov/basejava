@@ -1,6 +1,7 @@
 <%@ page import="com.basejava.webapp.model.InstitutionSection" %>
 <%@ page import="com.basejava.webapp.model.ListSection" %>
 <%@ page import="com.basejava.webapp.model.SectionType" %>
+<%@ page import="com.basejava.webapp.utils.DateUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -32,7 +33,7 @@
             </textarea>
         </c:when>
         <c:when test="${sectionType == 'EXPERIENCE' || sectionType == 'EDUCATION'}">
-            <c:forEach var="insitute" items="<%=((InstitutionSection) section).getInstitutions()%>" varStatus="index">
+            <c:forEach var="insitute" items="<%=((InstitutionSection) section).getInstitutions()%>" varStatus="counter">
                 <dl>
                     <dt>Название учреждения:</dt>
                     <dd>
@@ -46,7 +47,40 @@
                     </dd>
                 </dl>
                 <br>
-                <div style="margin-left: 30px"></div>
+                <div style="margin-left: 30px">
+                    <c:forEach var="position" items="${insitute.positions}">
+                        <jsp:useBean id="row" type="com.basejava.webapp.model.Institution.Position"/>
+                        <dl>
+                            <dt>Начальная дата:</dt>
+                            <dd>
+                                <input type="text" name="${sectionType}${counter.index}startDate" size="10"
+                                       value="<%=DateUtils.format(row.getStartDate())%>" placeholder="MM/yyyy"/>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>Конечная дата:</dt>
+                            <dd>
+                                <input type="text" name="${sectionType}${counter.index}endDate" size="10"
+                                       value="<%=DateUtils.format(row.getEndDate())%>" placeholder="MM/yyyy"/>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>Должность:</dt>
+                            <dd>
+                                <input type="text" name="${sectionType}${counter.index}title" size="75"
+                                       value="${row.title}>"/>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>Описание:</dt>
+                            <dd>
+                                <textarea name="${sectionType}${counter.index}description" rows="2" cols="75">
+                                        ${row.description}
+                                </textarea>
+                            </dd>
+                        </dl>
+                    </c:forEach>
+                </div>
             </c:forEach>
         </c:when>
     </c:choose>

@@ -18,9 +18,9 @@ import static com.basejava.webapp.utils.DateUtils.of;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Institution implements Serializable {
     private static final long serialVersionUID = 1L;
-
     private HyperLink homePage;
     private List<Position> positions;
+    public static final Institution EMPTY = new Institution(new HyperLink("", ""), Position.EMPTY);
 
     public Institution() {
     }
@@ -66,6 +66,7 @@ public class Institution implements Serializable {
 
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
+        public static final Position EMPTY = new Position();
         private String title;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate startDate;
